@@ -23,6 +23,11 @@ namespace SudokuSolver.Solver
 
 		public int NextValue { get; set; } = 1;
 
+		public bool IsAt(Position position)
+		{
+			return position.X == this.SetX && position.Y == this.SetY;
+		}
+
 		public static NextStep? GetNext(Board board)
 		{
 			var nextStep = new NextStep(board);

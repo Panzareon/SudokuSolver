@@ -27,6 +27,12 @@ namespace SudokuSolver.Model
 			return this.tiles[x + y * this.Width];
 		}
 
+
+		public Tile GetTile(Position position)
+		{
+			return this.GetTile(position.X, position.Y);
+		}
+
 		public Tile SetTile(int x, int y, Tile tile)
 		{
 			return this.tiles[x + y * this.Width] = tile;

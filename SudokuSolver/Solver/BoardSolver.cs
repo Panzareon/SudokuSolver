@@ -1,5 +1,6 @@
 ﻿using SudokuSolver.Model;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,7 +24,13 @@ namespace SudokuSolver.Solver
 		{
 			var checkedBoards = new HashSet<Board>();
 			var boardToCheck = new Stack<(Board Board, NextStep Step)>();
-			boardToCheck.Push((this.board, new NextStep(this.board)));
+			var initialStep = NextStep.GetNext(board);
+			if (initialStep == null)
+			{
+				yield break;
+			}
+
+			boardToCheck.Push((this.board, initialStep));
 			while (boardToCheck.Count > 0)
 			{
 				var next = boardToCheck.Pop();
