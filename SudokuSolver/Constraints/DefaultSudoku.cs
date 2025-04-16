@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.Constraints
 {
-	internal class DefaultSudoku : IConstraint
+	public class DefaultSudoku : IConstraint
 	{
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

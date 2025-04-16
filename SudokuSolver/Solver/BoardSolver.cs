@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.Solver
 {
-	public class Solver
+	public class BoardSolver
 	{
 		private readonly Board board;
 		private readonly IConstraint[] constraints;
 
-		public Solver(Board board, IConstraint[] constraints)
+		public BoardSolver(Board board, IConstraint[] constraints)
 		{
 			this.board = board;
 			this.constraints = constraints;
 		}
 
-		public Board? Solve()
+		public IEnumerable<Board> Solve()
 		{
 			var checkedBoards = new HashSet<Board>();
 			var boardToCheck = new Stack<(Board Board, NextStep Step)>();
@@ -46,13 +46,14 @@ namespace SudokuSolver.Solver
 					if (nextStep == null)
 					{
 						Debug.Assert(this.IsFinished(board));
-						return board;
+						yield return board;
 					}
-					boardToCheck.Push((board, nextStep));
+					else
+					{
+						boardToCheck.Push((board, nextStep));
+					}
 				}
 			}
-
-			return null;
 		}
 
 		private bool IsFinished(Board board)

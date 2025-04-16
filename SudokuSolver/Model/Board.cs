@@ -79,5 +79,24 @@ namespace SudokuSolver.Model
 				Console.WriteLine();
 			}
 		}
+
+		public static Board Parse(string boardRepresentation)
+		{
+			var lines = boardRepresentation.ReplaceLineEndings().Split(Environment.NewLine).ToList();
+			var board = new Board(lines[0].Length, lines.Count);
+			for (var y = 0; y < lines.Count; y++)
+			{
+				var line = lines[y];
+				for (var x = 0; x < line.Length; x++)
+				{
+					if (int.TryParse(line[x].ToString(), out var value))
+					{
+						board.SetTile(x, y, new Tile { IsSet = true, Value = value });
+					}
+				}
+			}
+
+			return board;
+		}
 	}
 }
