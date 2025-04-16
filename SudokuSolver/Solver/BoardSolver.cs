@@ -37,11 +37,7 @@ namespace SudokuSolver.Solver
 				if (this.CanPlace(next.Board, next.Step))
 				{
 					var board = next.Step.Apply();
-					if (!checkedBoards.Add(board))
-					{
-						var other = checkedBoards.FirstOrDefault(x => x.Equals(board));
-						Debug.Assert(false, "The boards to check should be unique");
-					}
+					Debug.Assert(checkedBoards.Add(board), "The boards to check should be unique");
 					nextStep = NextStep.GetNext(board);
 					if (nextStep == null)
 					{

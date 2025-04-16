@@ -32,7 +32,11 @@ namespace SudokuSolver.Tests
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Has.Count.EqualTo(1));
+#if DEBUG
 			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(150));
+#else
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5));
+#endif
 		}
 
 		[Test]
@@ -60,7 +64,11 @@ namespace SudokuSolver.Tests
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Has.Count.EqualTo(3));
+#if DEBUG
 			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(12000));
+#else
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(25));
+#endif
 		}
 	}
 }
