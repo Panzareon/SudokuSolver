@@ -2,6 +2,7 @@
 using SudokuSolver.Solver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,11 +29,11 @@ namespace SudokuSolver.Constraints
 			return true;
 		}
 
-		public void RemoveNotPossibleValues(Board board)
+		public bool RemoveNotPossibleValues(Board board)
 		{
-			RemoveColumnGroups(board);
-			RemoveRowGroups(board);
-			RemoveBoxGroups(board);
+			return RemoveColumnGroups(board)
+				&& RemoveRowGroups(board)
+				&& RemoveBoxGroups(board);
 		}
 
 		private bool NumberExistsInBox(Board board, NextStep nextStep)
@@ -82,7 +83,7 @@ namespace SudokuSolver.Constraints
 			return false;
 		}
 
-		private static void RemoveRowGroups(Board board)
+		private static bool RemoveRowGroups(Board board)
 		{
 			for (var y = 0; y < board.Height; y++)
 			{
@@ -93,7 +94,13 @@ namespace SudokuSolver.Constraints
 				}
 
 				RemoveFromSet(set);
+				if (!IsValidSet(board, set))
+				{
+					return false;
+				}
 			}
+
+			return true;
 		}
 
 		private static void RemoveFromSet(List<PossibleValues> set)
@@ -128,7 +135,7 @@ namespace SudokuSolver.Constraints
 			}
 		}
 
-		private static void RemoveColumnGroups(Board board)
+		private static bool RemoveColumnGroups(Board board)
 		{
 			for (var x = 0; x < board.Width; x++)
 			{
@@ -139,10 +146,29 @@ namespace SudokuSolver.Constraints
 				}
 
 				RemoveFromSet(set);
+				if (!IsValidSet(board, set))
+				{
+					return false;
+				}
 			}
+
+			return true;
 		}
 
-		private static void RemoveBoxGroups(Board board)
+		private static bool IsValidSet(Board board, List<PossibleValues> set)
+		{
+			for (var i = 1; i <= board.MaxNumber; i++)
+			{
+				if (!set.Any(x => x.Values.Contains(i)))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private static bool RemoveBoxGroups(Board board)
 		{
 			for (var boxX = 0; boxX < board.Width; boxX += board.BoxSize)
 			{
@@ -158,8 +184,14 @@ namespace SudokuSolver.Constraints
 					}
 
 					RemoveFromSet(set);
+					if (!IsValidSet(board, set))
+					{
+						return false;
+					}
 				}
 			}
+
+			return true;
 		}
 
 	}

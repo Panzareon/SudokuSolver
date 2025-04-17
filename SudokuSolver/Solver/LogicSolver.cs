@@ -15,13 +15,18 @@ namespace SudokuSolver.Solver
 		{
 			this.constraints = constraints;
 		}
-		public void Solve(Board board)
+		public bool Solve(Board board)
 		{
 			this.RemoveNotPlaceable(board);
 			foreach (var constraint in constraints)
 			{
-				constraint.RemoveNotPossibleValues(board);
+				if (!constraint.RemoveNotPossibleValues(board))
+				{
+					return false;
+				}
 			}
+
+			return true;
 		}
 
 		private void RemoveNotPlaceable(Board board)

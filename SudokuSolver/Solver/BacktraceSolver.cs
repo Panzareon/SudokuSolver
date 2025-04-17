@@ -26,7 +26,11 @@ namespace SudokuSolver.Solver
 		{
 			var checkedBoards = new HashSet<Board>();
 			var boardToCheck = new Stack<(Board Board, NextStep Step)>();
-			this.logicSolver.Solve(this.board);
+			if (!this.logicSolver.Solve(this.board))
+			{
+				yield break;
+			}
+
 			var initialStep = NextStep.GetNext(board);
 			if (initialStep == null)
 			{

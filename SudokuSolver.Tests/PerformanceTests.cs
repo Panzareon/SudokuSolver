@@ -7,6 +7,13 @@ namespace SudokuSolver.Tests
 {
 	public class PerformanceTests
 	{
+		[OneTimeSetUp]
+		public void WarmUp()
+		{
+			_ = new BacktraceSolver(new Board(9, 9), [new DefaultSudoku(), new ConsecutiveConstraint(new Position(0, 1), new Position(0, 2))])
+				.Solve().First();
+		}
+
 		[Test]
 		public void SolveSimpleSudokuPerformanceTests()
 		{
@@ -33,7 +40,7 @@ namespace SudokuSolver.Tests
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Has.Count.EqualTo(1));
 #if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(50));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(30));
 #else
 			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(7));
 #endif
@@ -65,9 +72,9 @@ namespace SudokuSolver.Tests
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Has.Count.EqualTo(3));
 #if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(200));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(150));
 #else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(30));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(17));
 #endif
 		}
 		[Test]
@@ -95,9 +102,9 @@ namespace SudokuSolver.Tests
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Is.Empty);
 #if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(2500));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5));
 #else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(600));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(2));
 #endif
 		}
 	}
