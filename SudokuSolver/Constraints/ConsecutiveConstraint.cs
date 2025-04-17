@@ -33,5 +33,9 @@ namespace SudokuSolver.Constraints
 
 			return adjacent.Value == nextStep.NextValue + 1 || adjacent.Value == nextStep.NextValue - 1;
 		}
+
+		public void RemoveNotPossibleValues(Board board)
+		{
+		}
 	}
 }

@@ -9,11 +9,17 @@ namespace SudokuSolver.Model
 	public class Board
 	{
 		private Tile[] tiles;
+		private PossibleValues[] possibleValues;
 		public Board(int width, int height)
 		{
 			this.Width = width;
 			this.Height = height;
 			this.tiles = new Tile[width * height];
+			this.possibleValues = new PossibleValues[width * height];
+			for (var i = 0; i < this.possibleValues.Length; i++)
+			{
+				this.possibleValues[i] = new PossibleValues(this.MaxNumber);
+			}
 		}
 
 		public int Width { get; }
@@ -38,10 +44,35 @@ namespace SudokuSolver.Model
 			return this.tiles[x + y * this.Width] = tile;
 		}
 
+		public PossibleValues GetPossibleValues(int x, int y)
+		{
+			return this.possibleValues[x + y * this.Width];
+		}
+
 		public Board Clone()
 		{
 			var clone = new Board(this.Width, this.Height);
 			this.tiles.CopyTo(clone.tiles, 0);
+			for (var i = 0; i < this.possibleValues.Length; i++)
+			{
+				var existingNode = this.possibleValues[i].Values.First;
+				var copyList = clone.possibleValues[i].Values;
+				var copyNode = copyList.First;
+				while (copyNode != null)
+				{
+					if (copyNode.Value != existingNode?.Value)
+					{
+						var nextNode = copyNode.Next;
+						copyList.Remove(copyNode);
+						copyNode = nextNode;
+					}
+					else
+					{
+						copyNode = copyNode.Next;
+						existingNode = existingNode.Next;
+					}
+				}
+			}
 			return clone;
 		}
 

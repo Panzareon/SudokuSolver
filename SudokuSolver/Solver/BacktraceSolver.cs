@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.Solver
 {
-	public class BoardSolver
+	public class BacktraceSolver
 	{
 		private readonly Board board;
 		private readonly IConstraint[] constraints;
+		private readonly LogicSolver logicSolver;
 
-		public BoardSolver(Board board, IConstraint[] constraints)
+		public BacktraceSolver(Board board, IConstraint[] constraints)
 		{
+			this.logicSolver = new LogicSolver(constraints);
 			this.board = board;
 			this.constraints = constraints;
 		}
@@ -24,6 +26,7 @@ namespace SudokuSolver.Solver
 		{
 			var checkedBoards = new HashSet<Board>();
 			var boardToCheck = new Stack<(Board Board, NextStep Step)>();
+			this.logicSolver.Solve(this.board);
 			var initialStep = NextStep.GetNext(board);
 			if (initialStep == null)
 			{
@@ -44,6 +47,7 @@ namespace SudokuSolver.Solver
 				if (this.CanPlace(next.Board, next.Step))
 				{
 					var board = next.Step.Apply();
+					this.logicSolver.Solve(board);
 					Debug.Assert(checkedBoards.Add(board), "The boards to check should be unique");
 					nextStep = NextStep.GetNext(board);
 					if (nextStep == null)

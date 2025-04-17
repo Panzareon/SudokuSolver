@@ -28,6 +28,13 @@ namespace SudokuSolver.Constraints
 			return true;
 		}
 
+		public void RemoveNotPossibleValues(Board board)
+		{
+			RemoveColumnGroups(board);
+			RemoveRowGroups(board);
+			RemoveBoxGroups(board);
+		}
+
 		private bool NumberExistsInBox(Board board, NextStep nextStep)
 		{
 			var xStart = nextStep.SetX / board.BoxSize * board.BoxSize;
@@ -74,5 +81,86 @@ namespace SudokuSolver.Constraints
 
 			return false;
 		}
+
+		private static void RemoveRowGroups(Board board)
+		{
+			for (var y = 0; y < board.Height; y++)
+			{
+				var set = new List<PossibleValues>();
+				for (var x = 0; x < board.Width; x++)
+				{
+					set.Add(board.GetPossibleValues(x, y));
+				}
+
+				RemoveFromSet(set);
+			}
+		}
+
+		private static void RemoveFromSet(List<PossibleValues> set)
+		{
+			for (var i = 0; i < set.Count; i++)
+			{
+				var values = set[i].Values.ToList();
+				var checkedValues = new List<int> { i };
+				for (var checkIndex = 0; checkIndex < set.Count && checkedValues.Count < values.Count; checkIndex++)
+				{
+					if (checkIndex == i)
+					{
+						continue;
+					}
+
+					if (set[checkIndex].Values.All(x => values.Contains(x)))
+					{
+						checkedValues.Add(checkIndex);
+					}
+				}
+
+				if (checkedValues.Count == values.Count)
+				{
+					for (var removeIndex = 0; removeIndex < set.Count; removeIndex++)
+					{
+						if (!checkedValues.Contains(removeIndex))
+						{
+							set[removeIndex].RemoveValues(values);
+						}
+					}
+				}
+			}
+		}
+
+		private static void RemoveColumnGroups(Board board)
+		{
+			for (var x = 0; x < board.Width; x++)
+			{
+				var set = new List<PossibleValues>();
+				for (var y = 0; y < board.Height; y++)
+				{
+					set.Add(board.GetPossibleValues(x, y));
+				}
+
+				RemoveFromSet(set);
+			}
+		}
+
+		private static void RemoveBoxGroups(Board board)
+		{
+			for (var boxX = 0; boxX < board.Width; boxX += board.BoxSize)
+			{
+				for (var boxY = 0; boxY < board.Height; boxY += board.BoxSize)
+				{
+					var set = new List<PossibleValues>();
+					for (var x = 0; x < board.BoxSize; x++)
+					{
+						for (var y = 0; y < board.BoxSize; y++)
+						{
+							set.Add(board.GetPossibleValues(x + boxX, y + boxY));
+						}
+					}
+
+					RemoveFromSet(set);
+				}
+			}
+		}
+
 	}
 }

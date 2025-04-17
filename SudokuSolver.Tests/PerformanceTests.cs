@@ -25,7 +25,7 @@ namespace SudokuSolver.Tests
 				  7649 3 
 				61  2  4  
 				""");
-			var solver = new BoardSolver(board, [new DefaultSudoku()]);
+			var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
 
 			var result = solver.Solve().ToList();
 
@@ -33,9 +33,9 @@ namespace SudokuSolver.Tests
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Has.Count.EqualTo(1));
 #if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(150));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(50));
 #else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(7));
 #endif
 		}
 
@@ -57,7 +57,7 @@ namespace SudokuSolver.Tests
 				  7649   
 				61  2  4  
 				""");
-			var solver = new BoardSolver(board, [new DefaultSudoku()]);
+			var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
 
 			var result = solver.Solve().ToList();
 
@@ -65,9 +65,39 @@ namespace SudokuSolver.Tests
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(result, Has.Count.EqualTo(3));
 #if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(12000));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(200));
 #else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(25));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(30));
+#endif
+		}
+		[Test]
+		public void InvalidSudokuTest()
+		{
+			var stopwatch = new Stopwatch();
+			stopwatch.Start();
+
+			var board = Board.Parse(
+				"""
+				  9  5 63
+				    6    
+				5    4   
+				  6     4
+				   2   9 
+				   1   5 
+				  4   6  
+				   6 9 3 
+				61  2  4  
+				""");
+			var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+
+			var result = solver.Solve().ToList();
+			stopwatch.Stop();
+			TestContext.Out.WriteLine($"Took {stopwatch}");
+			Assert.That(result, Is.Empty);
+#if DEBUG
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(2500));
+#else
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(600));
 #endif
 		}
 	}

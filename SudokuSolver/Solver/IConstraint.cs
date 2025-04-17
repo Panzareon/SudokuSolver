@@ -10,5 +10,6 @@ namespace SudokuSolver.Solver
 	public interface IConstraint
 	{
 		bool CanPlace(Board board, NextStep nextStep);
+		void RemoveNotPossibleValues(Board board);
 	}
 }

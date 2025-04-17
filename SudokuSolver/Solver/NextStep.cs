@@ -47,14 +47,20 @@ namespace SudokuSolver.Solver
 
 		public NextStep? GetNextValue()
 		{
-			if (this.NextValue < board.MaxNumber)
+			var possibleValues = board.GetPossibleValues(this.SetX, this.SetY);
+			var nextValue = this.NextValue;
+			while (nextValue < board.MaxNumber)
 			{
-				return new NextStep(this.board)
+				nextValue++;
+				if (possibleValues.Values.Contains(nextValue))
 				{
-					SetX = this.SetX,
-					SetY = this.SetY,
-					NextValue = this.NextValue + 1,
-				};
+					return new NextStep(this.board)
+					{
+						SetX = this.SetX,
+						SetY = this.SetY,
+						NextValue = this.NextValue + 1,
+					};
+				}
 			}
 
 			return null;
