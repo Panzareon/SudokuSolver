@@ -48,7 +48,7 @@ namespace SudokuSolver.Solver
 					boardToCheck.Push((next.Board, nextStep));
 				}
 
-				if (this.CanPlace(next.Board, next.Step))
+				if (next.Board.CanPlace(next.Step, this.constraints))
 				{
 					var board = next.Step.Apply();
 					this.logicSolver.Solve(board);
@@ -77,19 +77,6 @@ namespace SudokuSolver.Solver
 					{
 						return false;
 					}
-				}
-			}
-
-			return true;
-		}
-
-		private bool CanPlace(Board board, NextStep nextStep)
-		{
-			for (var i = 0; i < constraints.Length; i++)
-			{
-				if (!constraints[i].CanPlace(board, nextStep))
-				{
-					return false;
 				}
 			}
 

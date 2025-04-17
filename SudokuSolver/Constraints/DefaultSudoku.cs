@@ -45,6 +45,11 @@ namespace SudokuSolver.Constraints
 			{
 				for (var y = 0; y < board.BoxSize; y++)
 				{
+					if (xStart + x == nextStep.SetX && yStart + y == nextStep.SetY)
+					{
+						continue;
+					}
+
 					var tile = board.GetTile(xStart + x, yStart + y);
 					if (tile.IsSet && tile.Value == nextStep.NextValue)
 					{
@@ -60,6 +65,11 @@ namespace SudokuSolver.Constraints
 		{
 			for (var x = 0; x < board.Width; x++)
 			{
+				if (nextStep.SetX == x)
+				{
+					continue;
+				}
+
 				var tile = board.GetTile(x, nextStep.SetY);
 				if (tile.IsSet && tile.Value == nextStep.NextValue)
 				{
@@ -73,6 +83,11 @@ namespace SudokuSolver.Constraints
 		{
 			for (var y = 0; y < board.Height; y++)
 			{
+				if (nextStep.SetY == y)
+				{
+					continue;
+				}
+
 				var tile = board.GetTile(nextStep.SetX, y);
 				if (tile.IsSet && tile.Value == nextStep.NextValue)
 				{

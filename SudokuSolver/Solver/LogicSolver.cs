@@ -26,6 +26,29 @@ namespace SudokuSolver.Solver
 				}
 			}
 
+			for (var x = 0; x < board.Width; x++)
+			{
+				for (var y = 0; y < board.Height; y++)
+				{
+					var tile = board.GetTile(x, y);
+					if (!tile.IsSet)
+					{
+						var possibleValues = board.GetPossibleValues(x, y);
+						if (possibleValues.Values.Count == 1)
+						{
+							var newValue = possibleValues.Values.First();
+							if (board.CanPlace(new NextStep(board) { SetX = x, SetY= y, NextValue = newValue }, constraints))
+							{
+								board.SetTile(x, y, new Tile { IsSet = true, Value = newValue });
+							}
+							else
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
 			return true;
 		}
 
@@ -51,6 +74,11 @@ namespace SudokuSolver.Solver
 							possibleValues.Values.Remove(node);
 							node = next;
 						}
+					}
+
+					if (!tile.IsSet && possibleValues.Values.Count == 1)
+					{
+						board.SetTile(x, y, new Tile { IsSet = true, Value = possibleValues.Values.First() });
 					}
 				}
 			}

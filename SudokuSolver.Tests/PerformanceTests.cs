@@ -17,10 +17,13 @@ namespace SudokuSolver.Tests
 		[Test]
 		public void SolveSimpleSudokuPerformanceTests()
 		{
+			const int NumberOfRepeats = 20;
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
-			var board = Board.Parse(
+			for (var i = 0; i < NumberOfRepeats; i++)
+			{
+				var board = Board.Parse(
 				"""
 				  9 85 63
 				 7 96    
@@ -32,28 +35,28 @@ namespace SudokuSolver.Tests
 				  7649 3 
 				61  2  4  
 				""");
-			var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+				var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
 
-			var result = solver.Solve().ToList();
+				var result = solver.Solve().ToList();
+				Assert.That(result, Has.Count.EqualTo(1));
+			}
 
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(result, Has.Count.EqualTo(1));
-#if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(30));
-#else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(7));
-#endif
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1.5 * NumberOfRepeats));
 		}
 
 		[Test]
 		public void SolveSudokuWithMultipleSolutionsPerformanceTests()
 		{
+			const int NumberOfRepeats = 10;
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
-			var board = Board.Parse(
-				"""
+			for (var i = 0; i < NumberOfRepeats; i++)
+			{
+				var board = Board.Parse(
+					"""
 				  9  5 63
 				 7 96    
 				5 1  4   
@@ -64,26 +67,26 @@ namespace SudokuSolver.Tests
 				  7649   
 				61  2  4  
 				""");
-			var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+				var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
 
-			var result = solver.Solve().ToList();
+				var result = solver.Solve().ToList();
+				Assert.That(result, Has.Count.EqualTo(3));
+			}
 
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(result, Has.Count.EqualTo(3));
-#if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(150));
-#else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(17));
-#endif
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5 * NumberOfRepeats));
 		}
 		[Test]
 		public void InvalidSudokuTest()
 		{
+			const int NumberOfRepeats = 100;
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
-			var board = Board.Parse(
+			for (var i = 0; i < NumberOfRepeats; i++)
+			{
+				var board = Board.Parse(
 				"""
 				  9  5 63
 				    6    
@@ -95,17 +98,15 @@ namespace SudokuSolver.Tests
 				   6 9 3 
 				61  2  4  
 				""");
-			var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+				var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
 
-			var result = solver.Solve().ToList();
+				var result = solver.Solve().ToList();
+				Assert.That(result, Is.Empty);
+			}
+
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(result, Is.Empty);
-#if DEBUG
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5));
-#else
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(2));
-#endif
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(0.5 * NumberOfRepeats));
 		}
 	}
 }
