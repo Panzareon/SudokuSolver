@@ -108,46 +108,13 @@ namespace SudokuSolver.Constraints
 					set.Add(board.GetPossibleValues(x, y));
 				}
 
-				RemoveFromSet(set);
-				if (!IsValidSet(board, set))
+				if (!UniqueConstraint.HandleSet(board, set))
 				{
 					return false;
 				}
 			}
 
 			return true;
-		}
-
-		private static void RemoveFromSet(List<PossibleValues> set)
-		{
-			for (var i = 0; i < set.Count; i++)
-			{
-				var values = set[i].Values.ToList();
-				var checkedValues = new List<int> { i };
-				for (var checkIndex = 0; checkIndex < set.Count && checkedValues.Count < values.Count; checkIndex++)
-				{
-					if (checkIndex == i)
-					{
-						continue;
-					}
-
-					if (set[checkIndex].Values.All(x => values.Contains(x)))
-					{
-						checkedValues.Add(checkIndex);
-					}
-				}
-
-				if (checkedValues.Count == values.Count)
-				{
-					for (var removeIndex = 0; removeIndex < set.Count; removeIndex++)
-					{
-						if (!checkedValues.Contains(removeIndex))
-						{
-							set[removeIndex].RemoveValues(values);
-						}
-					}
-				}
-			}
 		}
 
 		private static bool RemoveColumnGroups(Board board)
@@ -160,21 +127,7 @@ namespace SudokuSolver.Constraints
 					set.Add(board.GetPossibleValues(x, y));
 				}
 
-				RemoveFromSet(set);
-				if (!IsValidSet(board, set))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		private static bool IsValidSet(Board board, List<PossibleValues> set)
-		{
-			for (var i = 1; i <= board.MaxNumber; i++)
-			{
-				if (!set.Any(x => x.Values.Contains(i)))
+				if (!UniqueConstraint.HandleSet(board, set))
 				{
 					return false;
 				}
@@ -198,8 +151,7 @@ namespace SudokuSolver.Constraints
 						}
 					}
 
-					RemoveFromSet(set);
-					if (!IsValidSet(board, set))
+					if (!UniqueConstraint.HandleSet(board, set))
 					{
 						return false;
 					}
