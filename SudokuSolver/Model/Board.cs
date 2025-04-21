@@ -18,7 +18,7 @@ namespace SudokuSolver.Model
 			this.possibleValues = new PossibleValues[width * height];
 			for (var i = 0; i < this.possibleValues.Length; i++)
 			{
-				this.possibleValues[i] = new PossibleValues(this.MaxNumber);
+				this.possibleValues[i] = new PossibleValues(this.MaxNumber, i);
 			}
 		}
 

@@ -12,22 +12,30 @@ namespace SudokuSolver.Constraints
 	{
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
+			var containsNextStep = false;
+			var containsValue = false;
 			for (var i = 0; i < positions.Length; i++)
 			{
 				var position = positions[i];
 				if (nextStep.SetX == position.X && nextStep.SetY == position.Y)
 				{
+					containsNextStep = true;
 					continue;
 				}
 
 				var tile = board.GetTile(position);
 				if (tile.IsSet && tile.Value == nextStep.NextValue)
 				{
-					return false;
+					if (containsNextStep)
+					{
+						return false;
+					}
+
+					containsValue = true;
 				}
 			}
 
-			return true;
+			return !(containsNextStep && containsValue);
 		}
 
 		public bool RemoveNotPossibleValues(Board board)
@@ -80,17 +88,32 @@ namespace SudokuSolver.Constraints
 			}
 		}
 
-		private static bool IsValidSet(Board board, IReadOnlyCollection<PossibleValues> set)
+		private static bool IsValidSet(Board board, IReadOnlyList<PossibleValues> set)
 		{
-			for (var i = 1; i <= board.MaxNumber; i++)
+			var differentValues = set[0].Values.ToList();
+			if (differentValues.Count >= set.Count)
 			{
-				if (!set.Any(x => x.Values.Contains(i)))
+				return true;
+			}
+			for (var i = 1; i < set.Count; i++)
+			{
+				var node = set[i].Values.First;
+				while (node != null)
 				{
-					return false;
+					if (!differentValues.Contains(node.Value))
+					{
+						differentValues.Add(node.Value);
+						if (differentValues.Count >= set.Count)
+						{
+							return true;
+						}
+					}
+
+					node = node.Next;
 				}
 			}
 
-			return true;
+			return false;
 		}
 
 	}

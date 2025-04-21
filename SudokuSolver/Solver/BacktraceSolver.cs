@@ -34,6 +34,11 @@ namespace SudokuSolver.Solver
 			var initialStep = NextStep.GetNext(board);
 			if (initialStep == null)
 			{
+				if (this.IsFinished(board))
+				{
+					yield return board;
+				}
+
 				yield break;
 			}
 
@@ -51,7 +56,10 @@ namespace SudokuSolver.Solver
 				if (next.Board.CanPlace(next.Step, this.constraints))
 				{
 					var board = next.Step.Apply();
-					this.logicSolver.Solve(board);
+					if (!this.logicSolver.Solve(board))
+					{
+						continue;
+					}
 					Debug.Assert(checkedBoards.Add(board), "The boards to check should be unique");
 					nextStep = NextStep.GetNext(board);
 					if (nextStep == null)

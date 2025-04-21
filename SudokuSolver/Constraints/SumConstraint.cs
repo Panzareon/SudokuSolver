@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.Constraints
 {
-	public class SumConstraint(int sum, params Position[] positions) : IConstraint
+	public class SumConstraint(Func<int, bool> sumPredicate, params Position[] positions) : IConstraint
 	{
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
@@ -35,7 +35,7 @@ namespace SudokuSolver.Constraints
 				currentSum += tile.Value;
 			}
 
-			return currentSum == sum;
+			return sumPredicate(currentSum + nextStep.NextValue);
 		}
 
 

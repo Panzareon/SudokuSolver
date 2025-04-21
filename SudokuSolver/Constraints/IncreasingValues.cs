@@ -97,7 +97,7 @@ namespace SudokuSolver.Constraints
 						if (node.Value >= maxValue)
 						{
 							var next = node.Previous;
-							possibleValues.Values.Remove(node);
+							possibleValues.Remove(node);
 							node = next;
 						}
 						else
@@ -147,7 +147,7 @@ namespace SudokuSolver.Constraints
 						if (node.Value <= minValue)
 						{
 							var next = node.Next;
-							possibleValues.Values.Remove(node);
+							possibleValues.Remove(node);
 							node = next;
 						}
 						else

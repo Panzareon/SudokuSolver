@@ -71,7 +71,7 @@ namespace SudokuSolver.Solver
 						else
 						{
 							var next = node.Next;
-							possibleValues.Values.Remove(node);
+							possibleValues.Remove(node);
 							node = next;
 						}
 					}

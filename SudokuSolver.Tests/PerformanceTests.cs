@@ -5,15 +5,8 @@ using System.Diagnostics;
 
 namespace SudokuSolver.Tests
 {
-	public class PerformanceTests
+	public class PerformanceTests : PerformanceTestsBase
 	{
-		[OneTimeSetUp]
-		public void WarmUp()
-		{
-			_ = new BacktraceSolver(new Board(9, 9), [new DefaultSudoku(), new ConsecutiveConstraint(new Position(0, 1), new Position(0, 2))])
-				.Solve().First();
-		}
-
 		[Test]
 		public void SolveSimpleSudokuPerformanceTests()
 		{

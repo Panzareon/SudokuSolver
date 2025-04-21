@@ -8,12 +8,16 @@ namespace SudokuSolver.Model
 {
 	public class PossibleValues
 	{
-		public PossibleValues(int numberValues)
+		private readonly int index;
+
+		public PossibleValues(int numberValues, int index)
 		{
 			for (var i = 1; i <= numberValues; i++)
 			{
 				this.Values.AddLast(i);
 			}
+
+			this.index = index;
 		}
 		public LinkedList<int> Values { get; } = new();
 
@@ -28,6 +32,11 @@ namespace SudokuSolver.Model
 		public void RemoveValue(int value)
 		{
 			this.Values.Remove(value);
+		}
+
+		public void Remove(LinkedListNode<int> node)
+		{
+			this.Values.Remove(node);
 		}
 	}
 }
