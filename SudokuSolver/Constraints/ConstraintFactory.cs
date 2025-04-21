@@ -17,7 +17,7 @@ namespace SudokuSolver.Constraints
 
 		public static IEnumerable<IConstraint> KillerCage(int sum, params Position[] positions)
 		{
-			yield return new SumConstraint(currentSum => sum == currentSum, positions);
+			yield return new SumConstraint(sum, positions);
 			yield return new UniqueConstraint(positions);
 		}
 	}

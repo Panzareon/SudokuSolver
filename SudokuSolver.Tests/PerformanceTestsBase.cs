@@ -37,6 +37,7 @@ namespace SudokuSolver.Tests
 			}
 
 			stopwatch.Stop();
+			TestContext.Out.WriteLine($"Took {stopwatch.Elapsed / numberOfRuns} per run");
 			Assert.That(stopwatch.Elapsed / numberOfRuns, Is.LessThan(timePerRun));
 		}
 	}
