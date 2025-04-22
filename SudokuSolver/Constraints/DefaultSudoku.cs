@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.Constraints
 {
-	public class DefaultSudoku : IConstraint
+	public class DefaultSudoku(int boxWidth = 3, int boxHeight = 3) : IConstraint
 	{
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
@@ -38,12 +38,12 @@ namespace SudokuSolver.Constraints
 
 		private bool NumberExistsInBox(Board board, NextStep nextStep)
 		{
-			var xStart = nextStep.SetX / board.BoxSize * board.BoxSize;
-			var yStart = nextStep.SetY / board.BoxSize * board.BoxSize;
+			var xStart = nextStep.SetX / boxWidth * boxWidth;
+			var yStart = nextStep.SetY / boxHeight * boxHeight;
 
-			for (var x = 0; x < board.BoxSize; x++)
+			for (var x = 0; x < boxWidth; x++)
 			{
-				for (var y = 0; y < board.BoxSize; y++)
+				for (var y = 0; y < boxHeight; y++)
 				{
 					if (xStart + x == nextStep.SetX && yStart + y == nextStep.SetY)
 					{
@@ -136,16 +136,16 @@ namespace SudokuSolver.Constraints
 			return true;
 		}
 
-		private static bool RemoveBoxGroups(Board board)
+		private bool RemoveBoxGroups(Board board)
 		{
-			for (var boxX = 0; boxX < board.Width; boxX += board.BoxSize)
+			for (var boxX = 0; boxX < board.Width; boxX += boxWidth)
 			{
-				for (var boxY = 0; boxY < board.Height; boxY += board.BoxSize)
+				for (var boxY = 0; boxY < board.Height; boxY += boxHeight)
 				{
 					var set = new List<PossibleValues>();
-					for (var x = 0; x < board.BoxSize; x++)
+					for (var x = 0; x < boxWidth; x++)
 					{
-						for (var y = 0; y < board.BoxSize; y++)
+						for (var y = 0; y < boxHeight; y++)
 						{
 							set.Add(board.GetPossibleValues(x + boxX, y + boxY));
 						}

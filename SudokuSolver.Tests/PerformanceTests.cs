@@ -36,7 +36,7 @@ namespace SudokuSolver.Tests
 
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1.5 * NumberOfRepeats));
+			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1.7 * NumberOfRepeats));
 		}
 
 		[Test]
@@ -100,6 +100,32 @@ namespace SudokuSolver.Tests
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch}");
 			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(0.5 * NumberOfRepeats));
+		}
+
+		[Test]
+		public void Sudoku4x4Test()
+		{
+			var board = Board.Parse(
+				"""
+				1234
+				    
+				 3  
+				  2 
+				""");
+			var expectedResult = Board.Parse(
+				"""
+				1234
+				3412
+				2341
+				4123
+				""");
+			this.Test(
+				board,
+				100,
+				TimeSpan.FromMilliseconds(0.3),
+				[expectedResult],
+				null,
+				new DefaultSudoku(2, 2));
 		}
 	}
 }

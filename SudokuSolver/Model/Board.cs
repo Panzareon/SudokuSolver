@@ -14,6 +14,7 @@ namespace SudokuSolver.Model
 		{
 			this.Width = width;
 			this.Height = height;
+			this.MaxNumber = width > height ? width : height;
 			this.tiles = new Tile[width * height];
 			this.possibleValues = new PossibleValues[width * height];
 			for (var i = 0; i < this.possibleValues.Length; i++)
@@ -25,8 +26,7 @@ namespace SudokuSolver.Model
 		public int Width { get; }
 		public int Height { get; }
 
-		public int MaxNumber { get; } = 9;
-		public int BoxSize { get; } = 3;
+		public int MaxNumber { get; init; }
 
 		public Tile GetTile(int x, int y)
 		{
@@ -51,7 +51,10 @@ namespace SudokuSolver.Model
 
 		public Board Clone()
 		{
-			var clone = new Board(this.Width, this.Height);
+			var clone = new Board(this.Width, this.Height)
+			{
+				MaxNumber = this.MaxNumber,
+			};
 			this.tiles.CopyTo(clone.tiles, 0);
 			for (var i = 0; i < this.possibleValues.Length; i++)
 			{
