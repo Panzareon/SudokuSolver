@@ -108,6 +108,21 @@ namespace SudokuSolver.Model
 			return result;
 		}
 
+		public override string ToString()
+		{
+			var result = new StringBuilder();
+			for (int y = 0; y < this.Height; y++)
+			{
+				for (int x = 0; x < this.Width; x++)
+				{
+					result.Append(this.GetTile(x, y).Display);
+				}
+				result.AppendLine();
+			}
+
+			return result.ToString();
+		}
+
 		public void WriteToConsole()
 		{
 			for (int y = 0; y < this.Height; y++)

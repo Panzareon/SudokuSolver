@@ -1,4 +1,5 @@
-﻿using SudokuSolver.Constraints;
+﻿using NUnit.Framework;
+using SudokuSolver.Constraints;
 using SudokuSolver.Model;
 using SudokuSolver.Solver;
 using System;
@@ -60,6 +61,69 @@ namespace SudokuSolver.Tests
 				ConstraintFactory.GermanWhisper(new Position(5, 7), new Position(6, 8), new Position(7, 8)),
 				..ConstraintFactory.KillerCage(20, new Position(7, 7), new Position(7, 8), new Position(8, 7), new Position(8, 8)),
 				]);
+		}
+
+		/// <summary>
+		/// Test that solves the "Thermoregulators" sudoku by SSG.
+		/// </summary>
+		[Test]
+		public void Thermoregulators()
+		{
+			var board = new Board(9, 9);
+			this.Test(board,
+				1,
+				TimeSpan.FromMinutes(14.5),
+				[Board.Parse(
+					"""
+					824679315
+					196534782
+					753812469
+					671293854
+					249758136
+					538461927
+					365987241
+					487125693
+					912346578
+					""")],
+				1,
+				[new DefaultSudoku(),
+				..CreateSpecialThermometer(new Position(3, 3), new Position(2, 2), new Position(1, 2), new Position(2, 1), new Position(1, 1)),
+				..CreateSpecialThermometer(new Position(5, 3), new Position(6, 2), new Position(7, 2), new Position(6, 1), new Position(7, 1)),
+				..CreateSpecialThermometer(new Position(3, 5), new Position(2, 6), new Position(1, 6), new Position(2, 7), new Position(1, 7)),
+				..CreateSpecialThermometer(new Position(5, 5), new Position(6, 6), new Position(7, 6), new Position(6, 7), new Position(7, 7)),
+				..CreateSpecialThermometer(new Position(0, 4), new Position(1, 5), new Position(1, 4), new Position(1, 3), new Position(2, 4)),
+				..CreateSpecialThermometer(new Position(3, 8), new Position(4, 8), new Position(5, 7), new Position(5, 6), new Position(4, 6)),
+				..CreateSpecialThermometer(new Position(6, 4), new Position(7, 3), new Position(8, 4))]);
+
+
+			IEnumerable<IConstraint> CreateSpecialThermometer(params Position[] positions)
+			{
+				return [
+					new IncreasingValues(positions),
+					new CountAdjacentValuesConstraint(positions[0], IsValid, positions),
+					];
+			}
+			bool IsValid(IReadOnlyList<PossibleValues> values, int sum)
+			{
+				var minResult = 0;
+				var maxResult = 0;
+				for (var i = 0; i < values.Count - 1; i++)
+				{
+					var first = values[i];
+					var second = values[i + 1];
+					if (first.Values.All(x => second.Values.All(s => s == x + 1)))
+					{
+						minResult++;
+						maxResult++;
+					}
+					else if (first.Values.Any(x => second.Values.Any(s => s == x + 1)))
+					{
+						maxResult++;
+					}
+				}
+
+				return sum >= minResult && sum <= maxResult;
+			}
 		}
 	}
 }

@@ -38,5 +38,12 @@ namespace SudokuSolver.Model
 		{
 			this.Values.Remove(node);
 		}
+
+		public static PossibleValues Create(int value)
+		{
+			var possibleValue = new PossibleValues(0, -1);
+			possibleValue.Values.AddFirst(value);
+			return possibleValue;
+		}
 	}
 }
