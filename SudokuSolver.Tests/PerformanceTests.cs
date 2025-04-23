@@ -122,7 +122,7 @@ namespace SudokuSolver.Tests
 			this.Test(
 				board,
 				100,
-				TimeSpan.FromMilliseconds(0.3),
+				TimeSpan.FromMilliseconds(0.1),
 				[expectedResult],
 				null,
 				new DefaultSudoku(2, 2));

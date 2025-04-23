@@ -21,9 +21,19 @@ namespace SudokuSolver.Tests
 
 		protected void Test(Board board, int numberOfRuns, TimeSpan timePerRun, Board[] expectedResult, int? limitResult, params IConstraint[] constraints)
 		{
+			if (numberOfRuns > 1)
+			{
+				// Additional warmup run with the constraints from this test, skip for slow solves.
+				TestSolve();
+			}
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 			for (var i = 0; i < numberOfRuns; i++)
+			{
+				TestSolve();
+			}
+
+			void TestSolve()
 			{
 				var currentBoard = board.Clone();
 				var solver = new BacktraceSolver(currentBoard, constraints);
