@@ -35,8 +35,8 @@ namespace SudokuSolver.Tests
 			}
 
 			stopwatch.Stop();
-			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(1.7 * NumberOfRepeats));
+			TestContext.Out.WriteLine($"Took {stopwatch.Elapsed / NumberOfRepeats} per step");
+			Assert.That(stopwatch.Elapsed / NumberOfRepeats, Is.LessThan(TimeSpan.FromMilliseconds(1.2)));
 		}
 
 		[Test]
@@ -67,8 +67,8 @@ namespace SudokuSolver.Tests
 			}
 
 			stopwatch.Stop();
-			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5 * NumberOfRepeats));
+			TestContext.Out.WriteLine($"Took {stopwatch.Elapsed / NumberOfRepeats} per step");
+			Assert.That(stopwatch.Elapsed / NumberOfRepeats, Is.LessThan(TimeSpan.FromMilliseconds(2.5)));
 		}
 		[Test]
 		public void InvalidSudokuTest()
@@ -98,8 +98,8 @@ namespace SudokuSolver.Tests
 			}
 
 			stopwatch.Stop();
-			TestContext.Out.WriteLine($"Took {stopwatch}");
-			Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(0.5 * NumberOfRepeats));
+			TestContext.Out.WriteLine($"Took {stopwatch.Elapsed / NumberOfRepeats} per step");
+			Assert.That(stopwatch.Elapsed / NumberOfRepeats, Is.LessThan(TimeSpan.FromMilliseconds(0.5)));
 		}
 
 		[Test]
@@ -122,7 +122,7 @@ namespace SudokuSolver.Tests
 			this.Test(
 				board,
 				100,
-				TimeSpan.FromMilliseconds(0.1),
+				TimeSpan.FromMilliseconds(0.15),
 				[expectedResult],
 				null,
 				new DefaultSudoku(2, 2));

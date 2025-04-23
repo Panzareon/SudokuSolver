@@ -22,16 +22,25 @@ namespace SudokuSolver.Solver
 			this.constraints = constraints;
 		}
 
-		public IEnumerable<Board> Solve()
+		/// <summary>
+		/// Solves the board by trying out different values and tracing back when invalid sudokus are reached.
+		/// </summary>
+		/// <param name="logicRepeats">How often the initial logic step should be repeated to remove more possible values after other values are no longer available.</param>
+		/// <returns>All finished boards which can be reached from the initial board while following the constraints.</returns>
+		public IEnumerable<Board> Solve(int logicRepeats = 2)
 		{
 			var checkedBoards = new HashSet<Board>();
 			var boardToCheck = new Stack<(Board Board, NextStep Step)>();
-			if (!this.logicSolver.Solve(this.board))
+			for (var i = 0; i < logicRepeats; i++)
 			{
-				yield break;
+				if (!this.logicSolver.Solve(this.board))
+				{
+					yield break;
+				}
 			}
 
-			var initialStep = NextStep.GetNext(board);
+			var nextStepProvider = new NextStepProvider(this.board, this.constraints);
+			var initialStep = nextStepProvider.GetInitial();
 			if (initialStep == null)
 			{
 				if (this.IsFinished(board))
@@ -61,7 +70,7 @@ namespace SudokuSolver.Solver
 						continue;
 					}
 					Debug.Assert(checkedBoards.Add(board), "The boards to check should be unique");
-					nextStep = NextStep.GetNext(board);
+					nextStep = nextStepProvider.NextEmptyTile(board, next.Step);
 					if (nextStep == null)
 					{
 						Debug.Assert(this.IsFinished(board));

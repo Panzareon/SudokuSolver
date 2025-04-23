@@ -10,6 +10,8 @@ namespace SudokuSolver.Constraints
 {
 	public class ConsecutiveConstraint(Position first, Position second) : IConstraint
 	{
+		public IEnumerable<Position> MostImpactedPositions => [first, second];
+
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
 			Tile adjacent;

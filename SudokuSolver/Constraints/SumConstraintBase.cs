@@ -10,6 +10,8 @@ namespace SudokuSolver.Constraints
 {
 	public class SumConstraintBase(Func<int, bool> sumPredicate, params Position[] positions) : IConstraint
 	{
+		public IEnumerable<Position> MostImpactedPositions => positions;
+
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
 			var index = positions.FindIndex(new Position(nextStep.SetX, nextStep.SetY));

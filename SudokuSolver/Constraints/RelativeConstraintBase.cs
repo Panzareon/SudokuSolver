@@ -12,6 +12,8 @@ namespace SudokuSolver.Constraints
 	{
 		private readonly Position[][] positions;
 
+		public IEnumerable<Position> MostImpactedPositions => positions.SelectMany(x => x);
+
 		public RelativeConstraintBase(params Position[][] positions)
 		{
 			this.positions = positions;

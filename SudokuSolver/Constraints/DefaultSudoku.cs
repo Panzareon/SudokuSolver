@@ -11,6 +11,8 @@ namespace SudokuSolver.Constraints
 {
 	public class DefaultSudoku(int boxWidth = 3, int boxHeight = 3) : IConstraint
 	{
+		public IEnumerable<Position> MostImpactedPositions => [];
+
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
 			if (this.NumberExistsInRow(board, nextStep))

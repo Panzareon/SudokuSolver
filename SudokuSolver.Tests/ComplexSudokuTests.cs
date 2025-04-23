@@ -21,12 +21,7 @@ namespace SudokuSolver.Tests
 			var board = new Board(9, 9);
 			this.Test(board,
 				1,
-#if DEBUG
-				TimeSpan.FromSeconds(18)
-#else
-				TimeSpan.FromSeconds(3.5)
-#endif
-				,
+				TimeSpan.FromSeconds(1.6),
 				[Board.Parse(
 				"""
 				738526491
@@ -72,7 +67,7 @@ namespace SudokuSolver.Tests
 			var board = new Board(9, 9);
 			this.Test(board,
 				1,
-				TimeSpan.FromMinutes(14.5),
+				TimeSpan.FromMilliseconds(100),
 				[Board.Parse(
 					"""
 					824679315
