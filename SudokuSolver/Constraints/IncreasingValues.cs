@@ -114,7 +114,7 @@ namespace SudokuSolver.Constraints
 						}
 					}
 
-					if (!newMaxValueSet)
+					if (!newMaxValueSet || possibleValues.Values.Count == 0)
 					{
 						return false;
 					}
@@ -164,7 +164,7 @@ namespace SudokuSolver.Constraints
 						}
 					}
 
-					if (!newMinValueSet)
+					if (!newMinValueSet || possibleValues.Values.Count == 0)
 					{
 						return false;
 					}

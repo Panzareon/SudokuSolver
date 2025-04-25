@@ -99,7 +99,7 @@ namespace SudokuSolver.Tests
 
 			stopwatch.Stop();
 			TestContext.Out.WriteLine($"Took {stopwatch.Elapsed / NumberOfRepeats} per step");
-			Assert.That(stopwatch.Elapsed / NumberOfRepeats, Is.LessThan(TimeSpan.FromMilliseconds(0.5)));
+			Assert.That(stopwatch.Elapsed / NumberOfRepeats, Is.LessThan(TimeSpan.FromMilliseconds(0.4)));
 		}
 
 		[Test]
@@ -122,7 +122,7 @@ namespace SudokuSolver.Tests
 			this.Test(
 				board,
 				100,
-				TimeSpan.FromMilliseconds(0.15),
+				TimeSpan.FromMilliseconds(0.1),
 				[expectedResult],
 				null,
 				new DefaultSudoku(2, 2));

@@ -17,7 +17,11 @@ namespace SudokuSolver.Solver
 		}
 		public bool Solve(Board board)
 		{
-			this.RemoveNotPlaceable(board);
+			if (!this.RemoveNotPlaceable(board))
+			{
+				return false;
+			}
+
 			foreach (var constraint in constraints)
 			{
 				if (!constraint.RemoveNotPossibleValues(board))
@@ -52,7 +56,7 @@ namespace SudokuSolver.Solver
 			return true;
 		}
 
-		private void RemoveNotPlaceable(Board board)
+		private bool RemoveNotPlaceable(Board board)
 		{
 			for (var x = 0; x < board.Width; x++)
 			{
@@ -76,12 +80,19 @@ namespace SudokuSolver.Solver
 						}
 					}
 
+					if (possibleValues.Values.Count == 0)
+					{
+						return false;
+					}
+
 					if (!tile.IsSet && possibleValues.Values.Count == 1)
 					{
 						board.SetTile(x, y, new Tile { IsSet = true, Value = possibleValues.Values.First() });
 					}
 				}
 			}
+
+			return true;
 		}
 
 		private bool CanPlace(Board board, NextStep nextStep)

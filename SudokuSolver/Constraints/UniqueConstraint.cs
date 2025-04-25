@@ -42,8 +42,13 @@ namespace SudokuSolver.Constraints
 
 		public bool RemoveNotPossibleValues(Board board)
 		{
+			return HandleSet(board, positions);
+		}
+
+		public static bool HandleSet(Board board, IReadOnlyList<Position> positions)
+		{
 			var set = new List<PossibleValues>();
-			for (var i = 0; i < positions.Length; i++)
+			for (var i = 0; i < positions.Count; i++)
 			{
 				var position = positions[i];
 				set.Add(board.GetPossibleValues(position.X, position.Y));
@@ -54,11 +59,11 @@ namespace SudokuSolver.Constraints
 
 		public static bool HandleSet(Board board, IReadOnlyList<PossibleValues> set)
 		{
-			RemoveFromSet(set);
-			return IsValidSet(board, set);
+			return RemoveFromSet(set)
+				&& IsValidSet(board, set);
 		}
 
-		private static void RemoveFromSet(IReadOnlyList<PossibleValues> set)
+		private static bool RemoveFromSet(IReadOnlyList<PossibleValues> set)
 		{
 			for (var i = 0; i < set.Count; i++)
 			{
@@ -84,10 +89,16 @@ namespace SudokuSolver.Constraints
 						if (!checkedValues.Contains(removeIndex))
 						{
 							set[removeIndex].RemoveValues(values);
+							if (set[removeIndex].Values.Count == 0)
+							{
+								return false;
+							}
 						}
 					}
 				}
 			}
+
+			return true;
 		}
 
 		private static bool IsValidSet(Board board, IReadOnlyList<PossibleValues> set)
