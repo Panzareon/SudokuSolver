@@ -27,7 +27,7 @@ namespace SudokuSolver.Tests
 				   649 3 
 				61  2  4  
 				""");
-			var solver = new BacktraceSolver(board, [new DefaultSudoku(), new ConsecutiveConstraint(new Position(1, 6), new Position(0, 6))]);
+			var solver = new BacktraceSolver(board, [..ConstraintFactory.DefaultSudoku(), new ConsecutiveConstraint(new Position(1, 6), new Position(0, 6))]);
 
 			var result = solver.Solve().ToList();
 			result.ForEach(x =>
@@ -59,7 +59,7 @@ namespace SudokuSolver.Tests
 				   649 3 
 				613827549
 				""");
-			var solver = new BacktraceSolver(board, [new DefaultSudoku(), new ConsecutiveConstraint(new Position(3, 3), new Position(2, 3))]);
+			var solver = new BacktraceSolver(board, [..ConstraintFactory.DefaultSudoku(), new ConsecutiveConstraint(new Position(3, 3), new Position(2, 3))]);
 
 			var result = solver.Solve().ToList();
 			result.ForEach(x =>

@@ -10,6 +10,11 @@ namespace SudokuSolver.Constraints
 {
 	public static class ConstraintFactory
 	{
+		public static IEnumerable<IConstraint> DefaultSudoku(int boxWidth = 3, int boxHeight = 3)
+		{
+			yield return new DefaultSudokuRowsColumns();
+			yield return new DefaultSudokuBox(boxWidth, boxHeight);
+		}
 		public static IConstraint GermanWhisper(params Position[] positions)
 		{
 			return new MinDifferenceOnAdjacentConstraint(5, positions);

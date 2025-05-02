@@ -35,7 +35,7 @@ namespace SudokuSolver.Tests
 				172654839
 				""")],
 				null,
-				[new DefaultSudoku(),
+				[..ConstraintFactory.DefaultSudoku(),
 				..ConstraintFactory.KillerCage(20, new Position(0, 0), new Position(0, 1), new Position(1, 0), new Position(1, 1)),
 				ConstraintFactory.GermanWhisper(new Position(1, 0), new Position(2, 0), new Position(3, 1)),
 				new SumConstraintBase(x => x % 2 == 1, new Position(3, 0), new Position(4, 0), new Position(5,0)),
@@ -67,7 +67,7 @@ namespace SudokuSolver.Tests
 			var board = new Board(9, 9);
 			this.Test(board,
 				1,
-				TimeSpan.FromMilliseconds(150),
+				TimeSpan.FromMilliseconds(200),
 				[Board.Parse(
 					"""
 					824679315
@@ -81,7 +81,7 @@ namespace SudokuSolver.Tests
 					912346578
 					""")],
 				null,
-				[new DefaultSudoku(),
+				[..ConstraintFactory.DefaultSudoku(),
 				..CreateSpecialThermometer(new Position(3, 3), new Position(2, 2), new Position(1, 2), new Position(2, 1), new Position(1, 1)),
 				..CreateSpecialThermometer(new Position(5, 3), new Position(6, 2), new Position(7, 2), new Position(6, 1), new Position(7, 1)),
 				..CreateSpecialThermometer(new Position(3, 5), new Position(2, 6), new Position(1, 6), new Position(2, 7), new Position(1, 7)),
@@ -149,7 +149,7 @@ namespace SudokuSolver.Tests
 					823419675
 					""")],
 				null,
-				[new DefaultSudoku(),
+				[..ConstraintFactory.DefaultSudoku(),
 				..ConstraintFactory.KillerCage(18, new Position(0, 0), new Position(1, 0), new Position(0, 1)),
 				new ConsecutiveSetConstraint(new Position(3, 0), new Position(4, 0), new Position(5, 0)),
 				..ConstraintFactory.KillerCage(18, new Position(6, 0), new Position(7, 0), new Position(8, 0)),

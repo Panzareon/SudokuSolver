@@ -28,6 +28,8 @@ namespace SudokuSolver.Model
 
 		public int MaxNumber { get; init; }
 
+		public List<TileSet> TileSets { get; init; } = new();
+
 		public Tile GetTile(int x, int y)
 		{
 			return this.tiles[x + y * this.Width];
@@ -76,6 +78,11 @@ namespace SudokuSolver.Model
 					}
 				}
 			}
+			for (var i = 0; i < this.TileSets.Count; i++)
+			{
+				clone.TileSets.Add(this.TileSets[i].Clone());
+			}
+
 			return clone;
 		}
 

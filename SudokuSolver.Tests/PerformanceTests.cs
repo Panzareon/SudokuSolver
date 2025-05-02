@@ -28,7 +28,7 @@ namespace SudokuSolver.Tests
 				  7649 3 
 				61  2  4  
 				""");
-				var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+				var solver = new BacktraceSolver(board, [..ConstraintFactory.DefaultSudoku()]);
 
 				var result = solver.Solve().ToList();
 				Assert.That(result, Has.Count.EqualTo(1));
@@ -60,7 +60,7 @@ namespace SudokuSolver.Tests
 				  7649   
 				61  2  4  
 				""");
-				var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+				var solver = new BacktraceSolver(board, [..ConstraintFactory.DefaultSudoku()]);
 
 				var result = solver.Solve().ToList();
 				Assert.That(result, Has.Count.EqualTo(3));
@@ -91,7 +91,7 @@ namespace SudokuSolver.Tests
 				   6 9 3 
 				61  2  4  
 				""");
-				var solver = new BacktraceSolver(board, [new DefaultSudoku()]);
+				var solver = new BacktraceSolver(board, [..ConstraintFactory.DefaultSudoku()]);
 
 				var result = solver.Solve().ToList();
 				Assert.That(result, Is.Empty);
@@ -125,7 +125,7 @@ namespace SudokuSolver.Tests
 				TimeSpan.FromMilliseconds(0.1),
 				[expectedResult],
 				null,
-				new DefaultSudoku(2, 2));
+				[..ConstraintFactory.DefaultSudoku(2, 2)]);
 		}
 	}
 }

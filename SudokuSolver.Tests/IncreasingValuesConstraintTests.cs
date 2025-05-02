@@ -16,7 +16,7 @@ namespace SudokuSolver.Tests
 		{
 			var board = new Board(9, 9);
 			var solver = new BacktraceSolver(board, [
-				new DefaultSudoku(),
+				..ConstraintFactory.DefaultSudoku(),
 				new IncreasingValues(
 					new Position(0,0),
 					new Position(1,1),
@@ -46,7 +46,7 @@ namespace SudokuSolver.Tests
 		{
 			var board = new Board(9, 9);
 			var solver = new BacktraceSolver(board, [
-				new DefaultSudoku(),
+				..ConstraintFactory.DefaultSudoku(),
 				new IncreasingValues(
 					new Position(0,0),
 					new Position(1,1),

@@ -7,7 +7,7 @@ class Program
 {
 	static void Main(string[] args)
 	{
-		var solver = new Solver.BacktraceSolver(new Board(9, 9), [new DefaultSudoku()]);
+		var solver = new Solver.BacktraceSolver(new Board(9, 9), [..ConstraintFactory.DefaultSudoku()]);
 		var boards = solver.Solve().Take(2).ToList();
 		if (boards.Count == 0)
 		{

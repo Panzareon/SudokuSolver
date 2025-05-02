@@ -15,7 +15,7 @@ namespace SudokuSolver.Tests
 		[OneTimeSetUp]
 		public void WarmUp()
 		{
-			_ = new BacktraceSolver(new Board(9, 9), [new DefaultSudoku(), new ConsecutiveConstraint(new Position(0, 1), new Position(0, 2))])
+			_ = new BacktraceSolver(new Board(9, 9), [..ConstraintFactory.DefaultSudoku(), new ConsecutiveConstraint(new Position(0, 1), new Position(0, 2))])
 				.Solve().First();
 		}
 

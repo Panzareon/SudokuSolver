@@ -1,4 +1,5 @@
-﻿using SudokuSolver.Model;
+﻿using SudokuSolver.Constraints;
+using SudokuSolver.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,18 @@ namespace SudokuSolver.Solver
 			for (var i = 0; i < constraints.Length; i++)
 			{
 				if (!constraints[i].CanPlace(board, nextStep))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		public static bool CanSet(this Board board, TileSet set, Position position, IChaosConstructionConstraint[] constraints)
+		{
+			for (var i = 0; i < constraints.Length; i++)
+			{
+				if (!constraints[i].CanSet(board, set, position))
 				{
 					return false;
 				}
