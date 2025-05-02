@@ -52,7 +52,7 @@ namespace SudokuSolver.Constraints
 				return true;
 			}
 
-			if (possibleValues.Values.Last?.Value >= current && possibleValues.Values.Last.Value <= max)
+			if (possibleValues.Values.Last?.Value >= current && possibleValues.Values.First.Value <= max)
 			{
 				return true;
 			}
