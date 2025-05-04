@@ -2,7 +2,9 @@
 using SudokuSolver.Solver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace SudokuSolver.Constraints
 				return true;
 			}
 
-			var(tileSet, current, _) = GetCurrentState(board);
+			var(tileSet, current, _, _) = GetCurrentState(board);
 			if (tileSet == null)
 			{
 				return true;
@@ -30,7 +32,7 @@ namespace SudokuSolver.Constraints
 
 		public bool CanSet(Board board, TileSet tileSet, Position position)
 		{
-			var (currentTileSet, current, max) = GetCurrentState(board);
+			var (currentTileSet, current, max, _) = GetCurrentState(board);
 			if (tileSet != currentTileSet)
 			{
 				return true;
@@ -107,24 +109,89 @@ namespace SudokuSolver.Constraints
 
 		public bool RemoveNotPossibleValues(Board board)
 		{
-			var (currentTileSet, current, max) = GetCurrentState(board);
+			var (currentTileSet, current, max, possiblePositions) = GetCurrentState(board);
 			if (currentTileSet == null)
 			{
 				return true;
 			}
 
-			var possibleValues = board.GetPossibleValues(Start.X, Start.Y);
-			return CanStillFulfillCondition(currentTileSet, current, max, possibleValues);
-		}
-		private (TileSet? tileSet, int current, int max) GetCurrentState(Board board)
-		{
-			var tileSet = board.TileSets.FirstOrDefault(x => x.Positions.Contains(Start));
-			if (tileSet == null)
+			if (possiblePositions == null)
 			{
-				return (null, 0, 0);
+				throw new InvalidOperationException("possiblePositions should only be null if the currentTileSet is null");
 			}
 
-			var otherPositions = board.TileSets.Except([tileSet]).SelectMany(x => x.Positions).ToList();
+			var possibleValues = board.GetPossibleValues(Start.X, Start.Y);
+			var currentValue = possibleValues.Values.First;
+			while (currentValue != null)
+			{
+				if (currentValue.Value < current ||  currentValue.Value > max)
+				{
+					var next = currentValue.Next;
+					possibleValues.Remove(currentValue);
+					currentValue = next;
+				}
+				else
+				{
+					currentValue = currentValue.Next;
+				}
+			}
+
+			if (possibleValues.Values.First == null)
+			{
+				return false;
+			}
+
+			if (possiblePositions.Count == 0)
+			{
+				return true;
+			}
+
+			if (max == possibleValues.Values.First.Value)
+			{
+				// All possible values need to be set
+				foreach (var pair in possiblePositions.GroupBy(x => x.FromDirection))
+				{
+					foreach (var position in pair)
+					{
+						board.TileSets.AddPosition(currentTileSet, position.Position);
+					}
+
+					currentTileSet.RemovePossiblePosition(pair.Last().Position + Directions[pair.Key]);
+				}
+			}
+			else
+			{
+				// Some of the possiblePositions need to be set
+				var minToPlace = possibleValues.Values.First.Value - current;
+				if (minToPlace == 0 || Directions.Length == 1 || possiblePositions.Select(x => x.FromDirection).Distinct().Count() == 1)
+				{
+					return true;
+				}
+
+				// We need to place additional, and there is only one direction where to place it
+				for (var i = 0; i < minToPlace; i++)
+				{
+					board.TileSets.AddPosition(currentTileSet, possiblePositions[i].Position);
+				}
+			}
+
+			return true;
+		}
+
+		public bool RemoveNotPossibleTileSetPositions(Board board)
+		{
+			return true;
+		}
+		private (TileSet? tileSet, int current, int max, List<(Position Position, int FromDirection)>? possiblePositions) GetCurrentState(Board board)
+		{
+			var tileSet = board.TileSets.GetTileSetFromPosition(Start);
+			if (tileSet == null)
+			{
+				return (null, 0, 0, null);
+			}
+
+			var possiblePositions = new List<(Position Position, int DirectionIndex)>();
+			var otherPositions = board.TileSets.Sets.Except([tileSet]).SelectMany(x => x.Positions).ToList();
 			var current = 1;
 			var possibleAdditional = 0;
 			for (var i = 0; i < Directions.Length; i++)
@@ -134,7 +201,7 @@ namespace SudokuSolver.Constraints
 				var isBroken = false;
 				while (currentPosition.X >= 0 && currentPosition.X <= board.Width && currentPosition.Y >= 0 && currentPosition.Y <= board.Height)
 				{
-					if (!isBroken && tileSet.Positions.Contains(currentPosition))
+					if (!isBroken && tileSet == board.TileSets.GetTileSetFromPosition(currentPosition))
 					{
 						current++;
 					}
@@ -145,6 +212,7 @@ namespace SudokuSolver.Constraints
 					else
 					{
 						possibleAdditional++;
+						possiblePositions.Add((currentPosition, i));
 						isBroken = true;
 					}
 
@@ -152,8 +220,7 @@ namespace SudokuSolver.Constraints
 				}
 			}
 
-			return (tileSet, current, current + possibleAdditional);
+			return (tileSet, current, current + possibleAdditional, possiblePositions);
 		}
-
 	}
 }

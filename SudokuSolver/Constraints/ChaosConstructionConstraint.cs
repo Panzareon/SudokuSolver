@@ -16,15 +16,15 @@ namespace SudokuSolver.Constraints
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
-			for (var i = 0; i < board.TileSets.Count; i++)
+			for (var i = 0; i < board.TileSets.Sets.Count; i++)
 			{
-				var tileSet = board.TileSets[i];
+				var tileSet = board.TileSets.Sets[i];
 				if (tileSet.Positions.Count < 2)
 				{
 					continue;
 				}
 
-				if (tileSet.Positions.Contains(new Position(nextStep.SetX, nextStep.SetY)))
+				if (tileSet == board.TileSets.GetTileSetFromPosition(new Position(nextStep.SetX, nextStep.SetY)))
 				{
 					var position = tileSet.Positions.First;
 					while (position != null)
@@ -54,6 +54,23 @@ namespace SudokuSolver.Constraints
 
 			var positionsToConnect = new LinkedList<Position>(tileSet.Positions);
 			positionsToConnect.AddFirst(position);
+			var (isValid, connectedSubGroups, remainingTiles) = this.GenerateConnectedSubGroups(tileSet, positionsToConnect);
+			if (!isValid)
+			{
+				return false;
+			}
+
+			if (connectedSubGroups.Count == 1)
+			{
+				return true;
+			}
+
+			return CheckCanBeCombined(board, connectedSubGroups, remainingTiles, tileSet);
+		}
+
+		private (bool isValid, List<LinkedList<Position>> connectedSubGroups, int remainingTiles) GenerateConnectedSubGroups(TileSet tileSet, LinkedList<Position> positionsToConnect)
+		{
+			var positionsCount = positionsToConnect.Count;
 			var connectedSubGroups = new List<LinkedList<Position>>();
 			while (positionsToConnect.First != null)
 			{
@@ -70,25 +87,46 @@ namespace SudokuSolver.Constraints
 				}
 			}
 
-			var remainingTiles = tileSet.MaxPositions - (tileSet.Positions.Count + 1);
+			var remainingTiles = tileSet.MaxPositions - positionsCount;
 			if (remainingTiles == 0 && connectedSubGroups.Count > 1)
 			{
-				return false;
-			}
-			if (connectedSubGroups.Count == 1)
-			{
-				return true;
+				return (false, connectedSubGroups, remainingTiles);
 			}
 
-			return CheckCanBeCombined(board, connectedSubGroups, remainingTiles, tileSet);
+			return (true, connectedSubGroups, remainingTiles);
 		}
 
-		private bool CheckCanBeCombined(Board board, List<LinkedList<Position>> connectedSubGroups, int remainingTiles, TileSet tileSet)
+		public bool RemoveNotPossibleTileSetPositions(Board board)
+		{
+			for (var i = 0; i < board.TileSets.Sets.Count; i++)
+			{
+				var tileSet = board.TileSets.Sets[i];
+				if (tileSet.Positions.Count == 0)
+				{
+					continue;
+				}
+
+				var positionsToConnect = new LinkedList<Position>(tileSet.Positions);
+				var (isValid, connectedSubGroups, remainingTiles) = this.GenerateConnectedSubGroups(tileSet, positionsToConnect);
+				if (!isValid)
+				{
+					return false;
+				}
+
+				if (!CheckCanBeCombined(board, connectedSubGroups, remainingTiles, tileSet, true))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		private bool CheckCanBeCombined(Board board, List<LinkedList<Position>> connectedSubGroups, int remainingTiles, TileSet tileSet, bool updateBoard = false)
 		{
 			int checkSize = board.Width * board.Height;
 			var distancesBase = InitializePathfindingArray(board, tileSet);
 			var overallDistances = new int[checkSize];
-			var toCheck = new Queue<Position>();
+			var toCheck = new Queue<(Position Position, int Value)>();
 			for (var i = 0; i < connectedSubGroups.Count; i++)
 			{
 				var distances = new int[board.Width * board.Height];
@@ -97,31 +135,67 @@ namespace SudokuSolver.Constraints
 				while (current != null)
 				{
 					distances[current.Value.X + current.Value.Y * board.Width] = 1;
-					toCheck.Enqueue(current.Value);
+					toCheck.Enqueue((current.Value, 1));
 					current = current.Next;
 				}
+
+				// the positions already in the tile set have value 1, so adjacent tiles that can be set will have value 2
+				var currentlyProcessingValue = 2;
+				Position? singlePosition = null;
 				while (toCheck.TryDequeue(out var next))
 				{
 					PathfindingStep(board, remainingTiles, toCheck, distances, next);
-				}
-
-				for (var j = 0; j < checkSize; j++)
-				{
-					var value = distances[j];
-					if (value == 0)
+					if (updateBoard && next.Value == currentlyProcessingValue)
 					{
-						overallDistances[j] = -1;
-					}
-					else if (value > 0)
-					{
-						var currentDistance = overallDistances[j];
-						if (currentDistance >= 0)
+						if (singlePosition == null)
 						{
-							var newValue = currentDistance + value - 2;
-							overallDistances[j] = newValue;
+							singlePosition = next.Position;
+						}
+						else
+						{
+							currentlyProcessingValue = -1;
+						}
+
+						if (!toCheck.TryPeek(out var peek) || peek.Value == currentlyProcessingValue + 1)
+						{
+							if (singlePosition != null)
+							{
+								board.TileSets.AddPosition(tileSet, singlePosition);
+								currentlyProcessingValue++;
+							}
+							else
+							{
+								currentlyProcessingValue = -1;
+							}
 						}
 					}
 				}
+
+				if (remainingTiles > 0)
+				{
+					for (var j = 0; j < checkSize; j++)
+					{
+						var value = distances[j];
+						if (value == 0)
+						{
+							overallDistances[j] = -1;
+						}
+						else if (value > 0)
+						{
+							var currentDistance = overallDistances[j];
+							if (currentDistance >= 0)
+							{
+								var newValue = currentDistance + value - 2;
+								overallDistances[j] = newValue;
+							}
+						}
+					}
+				}
+			}
+
+			if (remainingTiles == 0)
+			{
+				return true;
 			}
 
 			for (var i = 0; i < checkSize; i++)
@@ -140,9 +214,9 @@ namespace SudokuSolver.Constraints
 		{
 			var checkSize = board.Width * board.Height;
 			var distancesBase = new int[checkSize];
-			for (int i = 0; i < board.TileSets.Count; i++)
+			for (int i = 0; i < board.TileSets.Sets.Count; i++)
 			{
-				var otherTileSet = board.TileSets[i];
+				var otherTileSet = board.TileSets.Sets[i];
 				if (otherTileSet == tileSet)
 				{
 					continue;
@@ -159,32 +233,32 @@ namespace SudokuSolver.Constraints
 			return distancesBase;
 		}
 
-		private static void PathfindingStep(Board board, int remainingTiles, Queue<Position> toCheck, int[] distances, Position next)
+		private static void PathfindingStep(Board board, int remainingTiles, Queue<(Position Position, int Value)> toCheck, int[] distances, (Position Position, int Value) next)
 		{
-			var currentValue = distances[next.X + next.Y * board.Width];
-			if (next.X > 0)
+			var currentValue = next.Value;
+			if (next.Position.X > 0)
 			{
-				var adjacent = new Position(next.X - 1, next.Y);
+				var adjacent = new Position(next.Position.X - 1, next.Position.Y);
 				CheckAdjacent(board, remainingTiles, distances, toCheck, currentValue, adjacent);
 			}
-			if (next.X < board.Width - 1)
+			if (next.Position.X < board.Width - 1)
 			{
-				var adjacent = new Position(next.X + 1, next.Y);
+				var adjacent = new Position(next.Position.X + 1, next.Position.Y);
 				CheckAdjacent(board, remainingTiles, distances, toCheck, currentValue, adjacent);
 			}
-			if (next.Y > 0)
+			if (next.Position.Y > 0)
 			{
-				var adjacent = new Position(next.X, next.Y - 1);
+				var adjacent = new Position(next.Position.X, next.Position.Y - 1);
 				CheckAdjacent(board, remainingTiles, distances, toCheck, currentValue, adjacent);
 			}
-			if (next.Y < board.Height - 1)
+			if (next.Position.Y < board.Height - 1)
 			{
-				var adjacent = new Position(next.X, next.Y + 1);
+				var adjacent = new Position(next.Position.X, next.Position.Y + 1);
 				CheckAdjacent(board, remainingTiles, distances, toCheck, currentValue, adjacent);
 			}
 		}
 
-		private static void CheckAdjacent(Board board, int remainingTiles, int[] distances, Queue<Position> toCheck, int currentValue, Position adjacent)
+		private static void CheckAdjacent(Board board, int remainingTiles, int[] distances, Queue<(Position Position, int Value)> toCheck, int currentValue, Position adjacent)
 		{
 			var adjacentPosition = adjacent.X + adjacent.Y * board.Width;
 			var adjacentValue = distances[adjacentPosition];
@@ -193,7 +267,7 @@ namespace SudokuSolver.Constraints
 				distances[adjacentPosition] = currentValue + 1;
 				if (currentValue + 1 < remainingTiles)
 				{
-					toCheck.Enqueue(adjacent);
+					toCheck.Enqueue((adjacent, currentValue + 1));
 				}
 			}
 		}
@@ -222,15 +296,15 @@ namespace SudokuSolver.Constraints
 			var numberOfRegions = board.Height * board.Width / SizeOfRegion;
 			for (var i = 0; i < numberOfRegions; i++)
 			{
-				board.TileSets.Add(new TileSet(TileSetType.SudokuRegion, SizeOfRegion, board));
+				board.TileSets.Sets.Add(new TileSet(TileSetType.SudokuRegion, SizeOfRegion, board));
 			}
 		}
 
 		public bool RemoveNotPossibleValues(Board board)
 		{
-			for (var i = 0; i < board.TileSets.Count; i++)
+			for (var i = 0; i < board.TileSets.Sets.Count; i++)
 			{
-				var tileSet = board.TileSets[i];
+				var tileSet = board.TileSets.Sets[i];
 				if (tileSet.Positions.Count > 1)
 				{
 					if (!UniqueConstraint.HandleSet(board, tileSet.Positions.ToArray()))
@@ -257,11 +331,11 @@ namespace SudokuSolver.Constraints
 			}
 
 			var distances = InitializePathfindingArray(board, tileSet);
-			var toCheck = new Queue<Position>();
+			var toCheck = new Queue<(Position Position, int Value)>();
 			var current = tileSet.Positions.First;
 			while (current != null)
 			{
-				toCheck.Enqueue(current.Value);
+				toCheck.Enqueue((current.Value, 1));
 				distances[current.Value.X + current.Value.Y * board.Width] = 1;
 				current = current.Next;
 			}

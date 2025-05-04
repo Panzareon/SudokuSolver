@@ -13,5 +13,7 @@ namespace SudokuSolver.Constraints
 		void InitializeBoard(Board board);
 
 		bool CanSet(Board board, TileSet tileSet, Position position);
+
+		bool RemoveNotPossibleTileSetPositions(Board board);
 	}
 }

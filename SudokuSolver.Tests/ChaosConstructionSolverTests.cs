@@ -34,13 +34,15 @@ namespace SudokuSolver.Tests
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(2, 0), new PositionDelta(-1, 1))
 				]);
 			var result = solver.Solve().First();
-			foreach (var tileSet in result.TileSets)
+			foreach (var tileSet in result.TileSets.Sets)
 			{
 				Assert.That(tileSet.Positions, Has.Count.EqualTo(6));
 			}
-			Assert.That(result.TileSets.Select(x => x.Positions), Has.One.EquivalentTo(new[] { new Position(0, 0), new Position(1, 0), new Position(2, 0), new Position(0, 1), new Position(1, 1), new Position(0, 2) }));
+			Assert.That(result.TileSets.Sets.Select(x => x.Positions), Has.One.EquivalentTo(new[] { new Position(0, 0), new Position(1, 0), new Position(2, 0), new Position(0, 1), new Position(1, 1), new Position(0, 2) }));
 			Assert.That(new[] { result.GetTile(0, 1).Value, result.GetTile(1, 1).Value, result.GetTile(0, 2).Value }, Is.EquivalentTo(new[] { 4, 5, 6 }));
-			Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(20)));
+			var elapsed = stopwatch.Elapsed;
+			TestContext.Out.WriteLine($"Took {elapsed}");
+			Assert.That(elapsed, Is.LessThan(TimeSpan.FromMilliseconds(400)));
 		}
 	}
 }

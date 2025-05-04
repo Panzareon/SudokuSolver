@@ -21,6 +21,8 @@ namespace SudokuSolver.Model
 			{
 				this.possibleValues[i] = new PossibleValues(this.MaxNumber, i);
 			}
+
+			this.TileSets = new TileSets(this);
 		}
 
 		public int Width { get; }
@@ -28,7 +30,7 @@ namespace SudokuSolver.Model
 
 		public int MaxNumber { get; }
 
-		public List<TileSet> TileSets { get; init; } = new();
+		public TileSets TileSets { get; private init; }
 
 		public Tile GetTile(int x, int y)
 		{
@@ -53,7 +55,10 @@ namespace SudokuSolver.Model
 
 		public Board Clone()
 		{
-			var clone = new Board(this.Width, this.Height, this.MaxNumber);
+			var clone = new Board(this.Width, this.Height, this.MaxNumber)
+			{
+				TileSets = new TileSets(this.TileSets),
+			};
 			this.tiles.CopyTo(clone.tiles, 0);
 			for (var i = 0; i < this.possibleValues.Length; i++)
 			{
@@ -74,10 +79,6 @@ namespace SudokuSolver.Model
 						existingNode = existingNode.Next;
 					}
 				}
-			}
-			for (var i = 0; i < this.TileSets.Count; i++)
-			{
-				clone.TileSets.Add(this.TileSets[i].Clone());
 			}
 
 			return clone;

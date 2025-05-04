@@ -16,21 +16,46 @@ namespace SudokuSolver.Model
 
 	public class TileSet
 	{
-		public TileSet(TileSetType tileSetType, int maxPositions)
+		private TileSet(TileSetType tileSetType, int maxPositions)
 		{
 			this.TileSetType = tileSetType;
 			this.MaxPositions = maxPositions;
 		}
 
+		public TileSet(TileSetType tileSetType, int maxPositions, Board board)
+			: this(tileSetType, maxPositions)
+		{
+			for (var x = 0; x < board.Width; x++)
+			{
+				for (var y = 0; y < board.Height; y++)
+				{
+					this.PossiblePositions.AddLast(new Position(x, y));
+				}
+			}
+		}
+
 		public TileSetType TileSetType { get; }
 		public int MaxPositions { get; }
-		public LinkedList<Position> Positions { get; init; } = new();
+		public LinkedList<Position> Positions { get; private init; } = new();
+
+		public LinkedList<Position> PossiblePositions { get; private init; } = new();
+
+		public void RemovePossiblePosition(Position position)
+		{
+			this.PossiblePositions.Remove(position);
+		}
+
+		public void RemovePossiblePosition(LinkedListNode<Position> position)
+		{
+			this.PossiblePositions.Remove(position);
+		}
 
 		public TileSet Clone()
 		{
 			return new TileSet(this.TileSetType, this.MaxPositions)
 			{
-				Positions = new(this.Positions)
+				Positions = new(this.Positions),
+				PossiblePositions = new(this.PossiblePositions),
 			};
 		}
 	}
