@@ -168,5 +168,42 @@ namespace SudokuSolver.Tests
 				new ConsecutiveSetConstraint(new Position(1, 8), new Position(2, 8), new Position(3, 8)),
 				]);
 		}
+
+		/// <summary>
+		/// A test that solves the "Holographic Principle" Sudoku by Shintaro Fushida-Hardy.
+		/// </summary>
+		[Test]
+		[Ignore("Currently takes forever to execute...")]
+		public void HolographicPrinciple()
+		{
+			var board = new Board(9, 9);
+			board.SetTile(2, 4, new Tile { Value = 9, IsSet = true });
+			board.SetTile(4, 4, new Tile { Value = 7, IsSet = true });
+			board.SetTile(6, 4, new Tile { Value = 8, IsSet = true });
+			var solver = new ChaosConstructionSolver(board,
+			[
+				new DefaultSudokuRowsColumns(),
+				new ChaosConstructionConstraint(9),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 0), new PositionDelta(1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(1, 0), new PositionDelta(-1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(4, 0), new PositionDelta(-1, 1), new PositionDelta(1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(7, 0), new PositionDelta(1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 0), new PositionDelta(-1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 1), new PositionDelta(1, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 1), new PositionDelta(-1, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 2), new PositionDelta(1, -1), new PositionDelta(1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 2), new PositionDelta(-1, -1), new PositionDelta(-1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 4), new PositionDelta(1, -1), new PositionDelta(1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 4), new PositionDelta(-1, -1), new PositionDelta(-1, 1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 7), new PositionDelta(1, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 7), new PositionDelta(-1, 0)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 8), new PositionDelta(1, 0), new PositionDelta(0, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(1, 8), new PositionDelta(0, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(7, 8), new PositionDelta(0, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 8), new PositionDelta(0, -1), new PositionDelta(-1, 0)),
+			]);
+
+			var result = solver.Solve().Single();
+		}
 	}
 }
