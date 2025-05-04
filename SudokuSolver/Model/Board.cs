@@ -10,11 +10,11 @@ namespace SudokuSolver.Model
 	{
 		private Tile[] tiles;
 		private PossibleValues[] possibleValues;
-		public Board(int width, int height)
+		public Board(int width, int height, int? maxNumberOverride = null)
 		{
 			this.Width = width;
 			this.Height = height;
-			this.MaxNumber = width > height ? width : height;
+			this.MaxNumber = maxNumberOverride ?? (width > height ? width : height);
 			this.tiles = new Tile[width * height];
 			this.possibleValues = new PossibleValues[width * height];
 			for (var i = 0; i < this.possibleValues.Length; i++)
@@ -26,7 +26,7 @@ namespace SudokuSolver.Model
 		public int Width { get; }
 		public int Height { get; }
 
-		public int MaxNumber { get; init; }
+		public int MaxNumber { get; }
 
 		public List<TileSet> TileSets { get; init; } = new();
 
@@ -53,10 +53,7 @@ namespace SudokuSolver.Model
 
 		public Board Clone()
 		{
-			var clone = new Board(this.Width, this.Height)
-			{
-				MaxNumber = this.MaxNumber,
-			};
+			var clone = new Board(this.Width, this.Height, this.MaxNumber);
 			this.tiles.CopyTo(clone.tiles, 0);
 			for (var i = 0; i < this.possibleValues.Length; i++)
 			{

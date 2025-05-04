@@ -205,5 +205,35 @@ namespace SudokuSolver.Tests
 
 			var result = solver.Solve().Single();
 		}
+
+		/// <summary>
+		/// A test that solves the "Compression Algorithm" sudoku puzzle by ChinStrap.
+		/// </summary>
+		[Test]
+		public void CompressionAlgorithm()
+		{
+			this.Test(
+				new Board(7, 7, maxNumberOverride: 9),
+				1,
+				TimeSpan.FromSeconds(0.5),
+				[
+					Board.Parse(
+						"""
+						6743218
+						1386954
+						2951763
+						7862491
+						4139825
+						9625147
+						8574639
+						""")],
+				null,
+				new DefaultSudokuRowsColumns(),
+				new SquishdokuConstraint(),
+				new IndexLine(new Position(0, 0), new Position(1, 0), new Position(1, 1), new Position(2, 1), new Position(2, 2), new Position(3, 2), new Position(3, 3), new Position(4, 3), new Position(5, 3)),
+				new IndexLine(new Position(4, 0), new Position(5, 0), new Position(5, 1), new Position(6, 1), new Position(6, 2)),
+				new IndexLine(new Position(6, 3), new Position(5, 4), new Position(5, 5), new Position(5, 6)),
+				new IndexLine(new Position(1, 4), new Position(2, 4), new Position(2, 5), new Position(3, 5), new Position(3, 6), new Position(4, 6)));
+		}
 	}
 }
