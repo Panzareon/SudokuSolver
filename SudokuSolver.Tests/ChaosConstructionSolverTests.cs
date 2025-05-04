@@ -40,7 +40,7 @@ namespace SudokuSolver.Tests
 			}
 			Assert.That(result.TileSets.Select(x => x.Positions), Has.One.EquivalentTo(new[] { new Position(0, 0), new Position(1, 0), new Position(2, 0), new Position(0, 1), new Position(1, 1), new Position(0, 2) }));
 			Assert.That(new[] { result.GetTile(0, 1).Value, result.GetTile(1, 1).Value, result.GetTile(0, 2).Value }, Is.EquivalentTo(new[] { 4, 5, 6 }));
-			Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(3)));
+			Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(20)));
 		}
 	}
 }

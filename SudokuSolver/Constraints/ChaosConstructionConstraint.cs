@@ -188,7 +188,7 @@ namespace SudokuSolver.Constraints
 		{
 			var adjacentPosition = adjacent.X + adjacent.Y * board.Width;
 			var adjacentValue = distances[adjacentPosition];
-			if (adjacentValue >= 0 && adjacentValue > currentValue + 1)
+			if (adjacentValue >= 0 && (adjacentValue == 0 || adjacentValue > currentValue + 1))
 			{
 				distances[adjacentPosition] = currentValue + 1;
 				if (currentValue + 1 < remainingTiles)
@@ -222,7 +222,7 @@ namespace SudokuSolver.Constraints
 			var numberOfRegions = board.Height * board.Width / SizeOfRegion;
 			for (var i = 0; i < numberOfRegions; i++)
 			{
-				board.TileSets.Add(new TileSet(TileSetType.SudokuRegion, SizeOfRegion));
+				board.TileSets.Add(new TileSet(TileSetType.SudokuRegion, SizeOfRegion, board));
 			}
 		}
 
