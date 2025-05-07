@@ -9,6 +9,15 @@
   <Design.DataContext>
     <vm:DesignTimeTileViewModel/>
   </Design.DataContext>
-
-  <TextBlock Text="{Binding Display}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <StackPanel
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center">
+    <TextBlock
+      Text="{Binding Display}"
+      IsVisible="{Binding !ShowPossibleValues}"
+      FontSize="30"/>
+    <TextBlock
+      Text="{Binding PossibleValues}"
+      IsVisible="{Binding ShowPossibleValues}"/>
+  </StackPanel>
 </UserControl>

@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using SudokuSolver.Constraints;
+using SudokuSolver.Solver;
+using System.Collections.ObjectModel;
 
 namespace SudokuSolver.UI.ViewModels
 {
@@ -6,13 +8,16 @@ namespace SudokuSolver.UI.ViewModels
 	{
 		public MainWindowViewModel()
 		{
-			this.Board = new BoardViewModel(Model.Board.Parse(
+			var board = Model.Board.Parse(
 				"""
 				1234
 				3412
-				2341
-				4123
-				"""));
+				    
+				    
+				""");
+			new LogicSolver([.. ConstraintFactory.DefaultSudoku(2, 2)])
+				.Solve(board);
+			this.Board = new BoardViewModel(board);
 		}
 		public BoardViewModel Board { get; set; }
 		public ObservableCollection<TileViewModel> Tiles { get; } = new();

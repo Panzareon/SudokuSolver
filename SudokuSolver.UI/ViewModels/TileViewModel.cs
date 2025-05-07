@@ -20,6 +20,10 @@ namespace SudokuSolver.UI.ViewModels
 
 		public string Display => this.board.GetTile(this.X, this.Y).Display;
 
+		public bool ShowPossibleValues => !this.board.GetTile(this.X, this.Y).IsSet;
+
+		public string PossibleValues => string.Join(string.Empty, this.board.GetPossibleValues(this.X, this.Y).Values);
+
 		public int X { get; }
 
 		public int Y { get; }

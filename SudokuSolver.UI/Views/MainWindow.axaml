@@ -3,7 +3,7 @@
         xmlns:vm="using:SudokuSolver.UI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="600"
         x:Class="SudokuSolver.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -32,8 +32,8 @@
     </ItemsControl.ItemTemplate>
     <ItemsControl.Styles>
       <Style x:DataType="vm:TileViewModel" Selector="ContentPresenter">
-        <Setter Property="Grid.Row" Value="{Binding X}" />
-        <Setter Property="Grid.Column" Value="{Binding Y}" />
+        <Setter Property="Grid.Column" Value="{Binding X}" />
+        <Setter Property="Grid.Row" Value="{Binding Y}" />
       </Style>
     </ItemsControl.Styles>
   </ItemsControl>
