@@ -104,13 +104,7 @@ namespace SudokuSolver.Model
 		}
 		public override int GetHashCode()
 		{
-			var result = 0;
-			for (var i = 0; i < this.tiles.Length; i++)
-			{
-				result ^= this.tiles[i].GetHashCode();
-			}
-
-			return result;
+			return this.ToString().GetHashCode();
 		}
 
 		public override string ToString()
