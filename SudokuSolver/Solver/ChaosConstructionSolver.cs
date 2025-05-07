@@ -42,6 +42,21 @@ namespace SudokuSolver.Solver
 			}
 
 			var initialStep = new Next(new Position(0, 0), 0);
+			if (this.board.TileSets.GetTileSetFromPosition(initialStep.Position) != null)
+			{
+				initialStep = initialStep.GetNextPosition(this.board);
+			}
+
+			if (initialStep == null)
+			{
+				var result = new BacktraceSolver(board, this.constraints).Solve(1);
+				foreach (var solution in result)
+				{
+					yield return solution;
+				}
+
+				yield break;
+			}
 
 			boardToCheck.Push((this.board, initialStep));
 			while (boardToCheck.Count > 0)
