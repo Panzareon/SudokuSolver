@@ -27,7 +27,7 @@
     </ItemsControl.ItemsPanel>
     <ItemsControl.ItemTemplate>
       <DataTemplate>
-        <TextBlock Text="{Binding Display}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <loc:Tile DataContext="{Binding .}"/>
       </DataTemplate>
     </ItemsControl.ItemTemplate>
     <ItemsControl.Styles>
