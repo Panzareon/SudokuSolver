@@ -132,7 +132,7 @@ namespace SudokuSolver.Tests
 				new Board(9, 9),
 				1,
 #if DEBUG
-				TimeSpan.FromMinutes(6),
+				TimeSpan.FromMinutes(2),
 #else
 				TimeSpan.FromSeconds(25),
 #endif
