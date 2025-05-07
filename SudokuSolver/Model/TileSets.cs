@@ -45,7 +45,7 @@ namespace SudokuSolver.Model
 		public void AddPosition(int tileSetIndex, Position position)
 		{
 			var tileSet = this.Sets[tileSetIndex];
-			Debug.Assert(!tileSet.Positions.Contains(position), "Positions shouldn't be added twice");
+			Debug.Assert(this.GetTileSetFromPosition(position) == null, "Positions shouldn't be added twice");
 			tileSet.Positions.AddLast(position);
 			this.cachedPositions[position.X + position.Y * this.width] = tileSetIndex;
 			if (tileSet.Positions.Count == tileSet.MaxPositions)
