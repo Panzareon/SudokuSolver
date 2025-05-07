@@ -21,13 +21,13 @@ namespace SudokuSolver.Constraints
 				return true;
 			}
 
-			var(tileSet, current, _, _) = GetCurrentState(board);
-			if (tileSet == null)
+			var(tileSet, current, max, _) = GetCurrentState(board);
+			if (tileSet != null && nextStep.NextValue > current + (tileSet.MaxPositions - tileSet.Positions.Count))
 			{
-				return true;
+				return false;
 			}
 
-			return nextStep.NextValue >= current && nextStep.NextValue <= current + (tileSet.MaxPositions - tileSet.Positions.Count);
+			return nextStep.NextValue >= current && nextStep.NextValue <= max;
 		}
 
 		public bool CanSet(Board board, TileSet tileSet, Position position)
@@ -163,7 +163,7 @@ namespace SudokuSolver.Constraints
 			{
 				// Some of the possiblePositions need to be set
 				var minToPlace = possibleValues.Values.First.Value - current;
-				if (minToPlace == 0 || Directions.Length == 1 || possiblePositions.Select(x => x.FromDirection).Distinct().Count() == 1)
+				if (minToPlace == 0 || Directions.Length == 1 || possiblePositions.Select(x => x.FromDirection).Distinct().Count() > 1)
 				{
 					return true;
 				}
@@ -185,13 +185,11 @@ namespace SudokuSolver.Constraints
 		private (TileSet? tileSet, int current, int max, List<(Position Position, int FromDirection)>? possiblePositions) GetCurrentState(Board board)
 		{
 			var tileSet = board.TileSets.GetTileSetFromPosition(Start);
-			if (tileSet == null)
-			{
-				return (null, 0, 0, null);
-			}
 
 			var possiblePositions = new List<(Position Position, int DirectionIndex)>();
-			var otherPositions = board.TileSets.Sets.Except([tileSet]).SelectMany(x => x.Positions).ToList();
+			var otherPositions = tileSet == null
+				? board.TileSets.Sets.Where(x => x.Positions.Count == x.MaxPositions).SelectMany(x => x.Positions).ToList()
+				: board.TileSets.Sets.Except([tileSet]).SelectMany(x => x.Positions).ToList();
 			var current = 1;
 			var possibleAdditional = 0;
 			for (var i = 0; i < Directions.Length; i++)
@@ -199,9 +197,9 @@ namespace SudokuSolver.Constraints
 				var direction = Directions[i];
 				var currentPosition = Start + direction;
 				var isBroken = false;
-				while (currentPosition.X >= 0 && currentPosition.X <= board.Width && currentPosition.Y >= 0 && currentPosition.Y <= board.Height)
+				while (currentPosition.X >= 0 && currentPosition.X < board.Width && currentPosition.Y >= 0 && currentPosition.Y < board.Height)
 				{
-					if (!isBroken && tileSet == board.TileSets.GetTileSetFromPosition(currentPosition))
+					if (!isBroken && tileSet != null && tileSet == board.TileSets.GetTileSetFromPosition(currentPosition))
 					{
 						current++;
 					}

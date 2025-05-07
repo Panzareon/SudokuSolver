@@ -126,6 +126,7 @@ namespace SudokuSolver.Constraints
 			int checkSize = board.Width * board.Height;
 			var distancesBase = InitializePathfindingArray(board, tileSet);
 			var overallDistances = new int[checkSize];
+			distancesBase.CopyTo(overallDistances, 0);
 			var toCheck = new Queue<(Position Position, int Value)>();
 			for (var i = 0; i < connectedSubGroups.Count; i++)
 			{
@@ -150,24 +151,24 @@ namespace SudokuSolver.Constraints
 						if (singlePosition == null)
 						{
 							singlePosition = next.Position;
+							if (!toCheck.TryPeek(out var peek) || peek.Value == currentlyProcessingValue + 1)
+							{
+								if (singlePosition != null)
+								{
+									board.TileSets.AddPosition(tileSet, singlePosition);
+									currentlyProcessingValue++;
+								}
+								else
+								{
+									currentlyProcessingValue = -1;
+								}
+							}
 						}
 						else
 						{
 							currentlyProcessingValue = -1;
 						}
 
-						if (!toCheck.TryPeek(out var peek) || peek.Value == currentlyProcessingValue + 1)
-						{
-							if (singlePosition != null)
-							{
-								board.TileSets.AddPosition(tileSet, singlePosition);
-								currentlyProcessingValue++;
-							}
-							else
-							{
-								currentlyProcessingValue = -1;
-							}
-						}
 					}
 				}
 
@@ -222,7 +223,7 @@ namespace SudokuSolver.Constraints
 					continue;
 				}
 
-				var current = tileSet.Positions.First;
+				var current = otherTileSet.Positions.First;
 				while (current != null)
 				{
 					distancesBase[current.Value.X + current.Value.Y * board.Width] = -1;

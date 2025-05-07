@@ -42,7 +42,7 @@ namespace SudokuSolver.Tests
 			Assert.That(new[] { result.GetTile(0, 1).Value, result.GetTile(1, 1).Value, result.GetTile(0, 2).Value }, Is.EquivalentTo(new[] { 4, 5, 6 }));
 			var elapsed = stopwatch.Elapsed;
 			TestContext.Out.WriteLine($"Took {elapsed}");
-			Assert.That(elapsed, Is.LessThan(TimeSpan.FromMilliseconds(400)));
+			Assert.That(elapsed, Is.LessThan(TimeSpan.FromMilliseconds(200)));
 		}
 	}
 }
