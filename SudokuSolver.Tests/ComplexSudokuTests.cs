@@ -190,7 +190,7 @@ namespace SudokuSolver.Tests
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(7, 0), new PositionDelta(1, 1)),
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 0), new PositionDelta(-1, 1)),
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 1), new PositionDelta(1, -1)),
-				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 1), new PositionDelta(-1, -1)),
+				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 1), new PositionDelta(-1, -1), new PositionDelta(-1, 1)),
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 2), new PositionDelta(1, -1), new PositionDelta(1, 1)),
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(8, 2), new PositionDelta(-1, -1), new PositionDelta(-1, 1)),
 				new NumberOfTilesInRegionInSpecifiedDirection(new Position(0, 4), new PositionDelta(1, -1), new PositionDelta(1, 1)),
