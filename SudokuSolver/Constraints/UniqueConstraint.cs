@@ -78,12 +78,14 @@ namespace SudokuSolver.Constraints
 
 					if (set[checkIndex].Values.All(x => values.Contains(x)))
 					{
+						// Set at index checkIndex has a subset of the values from this set
 						checkedValues.Add(checkIndex);
 					}
 				}
 
 				if (checkedValues.Count == values.Count)
 				{
+					// There are x tiles which only contain the values that this set has, so no other tile in the set may contain any of these values.
 					for (var removeIndex = 0; removeIndex < set.Count; removeIndex++)
 					{
 						if (!checkedValues.Contains(removeIndex))
