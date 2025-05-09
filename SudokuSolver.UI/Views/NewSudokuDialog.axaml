@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        x:Class="SudokuSolver.UI.Views.NewSudokuDialog"
+        Title="New Sudoku"
+        SizeToContent="WidthAndHeight"
+        MinWidth="300"
+        MinHeight="200">
+  <DockPanel Margin="10">
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+      <Button Click="OkClick">Ok</Button>
+      <Button Click="CancelClick">Cancel</Button>
+    </StackPanel>
+    <StackPanel>
+      <StackPanel>
+        <TextBlock Margin="0 5">Width:</TextBlock>
+        <NumericUpDown Name="Width" Value="9" Minimum="1" FormatString="0" />
+      </StackPanel>
+      <StackPanel>
+        <TextBlock Margin="0 5">Height:</TextBlock>
+        <NumericUpDown Name="Height" Value="9" Minimum="1" FormatString="0" />
+      </StackPanel>
+    </StackPanel>
+  </DockPanel>
+</Window>

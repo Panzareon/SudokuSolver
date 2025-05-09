@@ -15,5 +15,12 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainWindowViewModel/>
   </Design.DataContext>
-  <loc:BoardControl DataContext="{Binding Board}" />
+  <DockPanel>
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="_Sudoku">
+        <MenuItem Header="_New" Click="NewSudokuClick"/>
+      </MenuItem>
+    </Menu>
+    <loc:BoardControl DataContext="{Binding Board}" />
+  </DockPanel>
 </Window>
