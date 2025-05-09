@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:SudokuSolver.UI.ViewModels"
+             x:Class="SudokuSolver.UI.Views.BoardControl"
+             x:DataType="vm:BoardViewModel"
+             xmlns:loc="clr-namespace:SudokuSolver.UI.Views">
+  <Design.DataContext>
+    <vm:BoardViewModel/>
+  </Design.DataContext>
+  <ItemsControl ItemsSource="{Binding Tiles}" Name="Board">
+    <ItemsControl.ItemsPanel>
+      <ItemsPanelTemplate>
+        <Grid Name="InnerGrid"
+              ShowGridLines="True"
+              loc:GridBehavior.RowCount="{Binding Height}"
+              loc:GridBehavior.ColumnCount="{Binding Width}"/>
+      </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate>
+      <DataTemplate>
+        <loc:Tile DataContext="{Binding .}"/>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+    <ItemsControl.Styles>
+      <Style x:DataType="vm:TileViewModel" Selector="ContentPresenter">
+        <Setter Property="Grid.Column" Value="{Binding X}" />
+        <Setter Property="Grid.Row" Value="{Binding Y}" />
+      </Style>
+    </ItemsControl.Styles>
+  </ItemsControl>
+
+</UserControl>

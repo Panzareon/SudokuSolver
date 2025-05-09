@@ -15,27 +15,5 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
     <vm:MainWindowViewModel/>
   </Design.DataContext>
-
-  <ItemsControl ItemsSource="{Binding Board.Tiles}" Name="Board">
-    <ItemsControl.ItemsPanel>
-      <ItemsPanelTemplate>
-        <Grid Name="InnerGrid"
-              ShowGridLines="True"
-              loc:GridBehavior.RowCount="{Binding Board.Height}"
-              loc:GridBehavior.ColumnCount="{Binding Board.Width}"/>
-      </ItemsPanelTemplate>
-    </ItemsControl.ItemsPanel>
-    <ItemsControl.ItemTemplate>
-      <DataTemplate>
-        <loc:Tile DataContext="{Binding .}"/>
-      </DataTemplate>
-    </ItemsControl.ItemTemplate>
-    <ItemsControl.Styles>
-      <Style x:DataType="vm:TileViewModel" Selector="ContentPresenter">
-        <Setter Property="Grid.Column" Value="{Binding X}" />
-        <Setter Property="Grid.Row" Value="{Binding Y}" />
-      </Style>
-    </ItemsControl.Styles>
-  </ItemsControl>
-
+  <loc:BoardControl DataContext="{Binding Board}" />
 </Window>

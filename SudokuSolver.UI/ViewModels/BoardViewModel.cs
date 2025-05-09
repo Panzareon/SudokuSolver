@@ -1,4 +1,6 @@
-﻿using SudokuSolver.Model;
+﻿using SudokuSolver.Constraints;
+using SudokuSolver.Model;
+using SudokuSolver.Solver;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +13,12 @@ namespace SudokuSolver.UI.ViewModels
 	public class BoardViewModel : ViewModelBase
 	{
 		private Board board;
+
+		public BoardViewModel()
+			: this(CreateTestBoard())
+		{
+
+		}
 
 		public BoardViewModel(Board board)
 		{
@@ -30,5 +38,19 @@ namespace SudokuSolver.UI.ViewModels
 		public int Height => this.board.Height;
 
 		public ObservableCollection<TileViewModel> Tiles { get; }
+
+		private static Board CreateTestBoard()
+		{
+			var board = Model.Board.Parse(
+				"""
+				1234
+				3412
+				    
+				    
+				""");
+			new LogicSolver([.. ConstraintFactory.DefaultSudoku(2, 2)])
+				.Solve(board);
+			return board;
+		}
 	}
 }
