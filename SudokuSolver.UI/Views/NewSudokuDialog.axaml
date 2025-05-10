@@ -16,11 +16,11 @@
     <StackPanel>
       <StackPanel>
         <TextBlock Margin="0 5">Width:</TextBlock>
-        <NumericUpDown Name="Width" Value="9" Minimum="1" FormatString="0" />
+        <NumericUpDown Name="WidthInput" Value="9" Minimum="1" FormatString="0" />
       </StackPanel>
       <StackPanel>
         <TextBlock Margin="0 5">Height:</TextBlock>
-        <NumericUpDown Name="Height" Value="9" Minimum="1" FormatString="0" />
+        <NumericUpDown Name="HeightInput" Value="9" Minimum="1" FormatString="0" />
       </StackPanel>
       <StackPanel Orientation="Horizontal">
         <StackPanel Margin="0 0 5 0">

@@ -17,9 +17,9 @@ public partial class NewSudokuDialog : Window
 
 	public bool Ok { get; private set; }
 
-	public int WidthValue => (int?)this.Width.Value ?? throw new InvalidOperationException("Value of width is not set");
+	public int WidthValue => (int?)this.WidthInput.Value ?? throw new InvalidOperationException("Value of width is not set");
 
-	public int HeightValue => (int?)this.Height.Value ?? throw new InvalidOperationException("Value of height is not set");
+	public int HeightValue => (int?)this.HeightInput.Value ?? throw new InvalidOperationException("Value of height is not set");
 
 	public IConstraint[] CreateConstraints()
 	{
