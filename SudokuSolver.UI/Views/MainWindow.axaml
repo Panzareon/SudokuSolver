@@ -21,6 +21,9 @@
         <MenuItem Header="_New" Click="NewSudokuClick"/>
       </MenuItem>
     </Menu>
+    <StackPanel DockPanel.Dock="Right">
+      <Button Margin="5" Command="{ Binding Board.SolveCommand }">Solve</Button>
+    </StackPanel>
     <loc:BoardControl DataContext="{Binding Board}" />
   </DockPanel>
 </Window>

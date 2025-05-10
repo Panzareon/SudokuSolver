@@ -22,6 +22,17 @@
         <TextBlock Margin="0 5">Height:</TextBlock>
         <NumericUpDown Name="Height" Value="9" Minimum="1" FormatString="0" />
       </StackPanel>
+      <StackPanel Orientation="Horizontal">
+        <StackPanel Margin="0 0 5 0">
+          <TextBlock Margin="0 5" MinWidth="120">Box Width:</TextBlock>
+          <NumericUpDown Name="BoxWidth" Value="3" Minimum="1" FormatString="0" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Margin="0 5" MinWidth="120">Box Height:</TextBlock>
+          <NumericUpDown Name="BoxHeight" Value="3" Minimum="1" FormatString="0" />
+        </StackPanel>
+      </StackPanel>
+      
     </StackPanel>
   </DockPanel>
 </Window>

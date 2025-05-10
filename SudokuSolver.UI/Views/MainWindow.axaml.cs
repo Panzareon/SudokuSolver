@@ -20,8 +20,14 @@ namespace SudokuSolver.UI.Views
 			await newSudokuDialog.ShowDialog(this);
 			if (newSudokuDialog.Ok && this.DataContext is MainWindowViewModel mainWindowViewModel)
 			{
-				mainWindowViewModel.Board = new BoardViewModel(new Model.Board(newSudokuDialog.WidthValue, newSudokuDialog.HeightValue));
+				mainWindowViewModel.Board = new BoardViewModel(
+					new Model.Board(newSudokuDialog.WidthValue, newSudokuDialog.HeightValue),
+					newSudokuDialog.CreateConstraints());
 			}
+		}
+
+		private void Binding(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+		{
 		}
 	}
 }

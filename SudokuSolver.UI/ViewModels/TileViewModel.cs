@@ -1,4 +1,5 @@
-﻿using SudokuSolver.Model;
+﻿using ReactiveUI;
+using SudokuSolver.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,5 +28,12 @@ namespace SudokuSolver.UI.ViewModels
 		public int X { get; }
 
 		public int Y { get; }
+
+		public void Refresh()
+		{
+			this.RaisePropertyChanged(nameof(Display));
+			this.RaisePropertyChanged(nameof(ShowPossibleValues));
+			this.RaisePropertyChanged(nameof(PossibleValues));
+		}
 	}
 }
