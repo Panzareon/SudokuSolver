@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
+             xmlns:vm="using:SudokuSolver.UI.ViewModels"
+             x:Class="SudokuSolver.UI.Views.TileView"
+             x:DataType="vm:TileViewModel">
+  <Design.DataContext>
+    <vm:DesignTimeTileViewModel/>
+  </Design.DataContext>
+  <Panel>
+    <ItemsControl ItemsSource="{Binding Constraints}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Panel>
+          </Panel>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Border
+            BorderThickness="{Binding BorderThickness}"
+            BorderBrush="Black">
+
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <Border
+      Focusable="True"
+      Name="FocusBorder"
+      TextInput="TextInput">
+      <StackPanel
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center">
+        <TextBlock
+          Text="{Binding Display}"
+          IsVisible="{Binding !ShowPossibleValues}"
+          FontSize="30"/>
+        <TextBlock
+          Text="{Binding PossibleValues}"
+          IsVisible="{Binding ShowPossibleValues}"/>
+      </StackPanel>
+    </Border>
+  </Panel>
+  <UserControl.Styles>
+    <Style Selector="Border#FocusBorder">
+      <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    <Style Selector="Border#FocusBorder:focus">
+      <Setter Property="Background" Value="#660000FF"/>
+    </Style>
+  </UserControl.Styles>
+</UserControl>

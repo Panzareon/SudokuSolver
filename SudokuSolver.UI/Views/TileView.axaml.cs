@@ -7,9 +7,9 @@ using System;
 
 namespace SudokuSolver.UI.Views
 {
-	public partial class Tile : UserControl
+	public partial class TileView : UserControl
 	{
-		public Tile()
+		public TileView()
 		{
 			InitializeComponent();
 			this.PointerPressed += (s, e) => this.FocusBorder.Focus();

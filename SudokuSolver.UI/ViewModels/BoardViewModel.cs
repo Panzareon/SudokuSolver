@@ -33,7 +33,26 @@ namespace SudokuSolver.UI.ViewModels
 			{
 				for (var y = 0; y < board.Height; y++)
 				{
-					this.Tiles.Add(new TileViewModel(board, x, y));
+					this.Tiles.Add(new TileViewModel(board, x, y, this.GetRelevantConstraints(x, y)));
+				}
+			}
+		}
+
+		private IEnumerable<ConstraintViewModel> GetRelevantConstraints(int x, int y)
+		{
+			foreach (var constraint in this.constraints)
+			{
+				switch (constraint)
+				{
+					case DefaultSudokuBox defaultSudokuBox:
+						if (x % defaultSudokuBox.BoxWidth == 0
+							|| x % defaultSudokuBox.BoxWidth == defaultSudokuBox.BoxWidth - 1
+							|| y % defaultSudokuBox.BoxHeight == 0
+							|| y % defaultSudokuBox.BoxHeight == defaultSudokuBox.BoxHeight - 1)
+						{
+							yield return new ConstraintViewModel(defaultSudokuBox, x, y);
+						}
+						break;
 				}
 			}
 		}

@@ -13,6 +13,10 @@ namespace SudokuSolver.Constraints
 	{
 		public IEnumerable<Position> MostImpactedPositions => [];
 
+		public int BoxWidth => boxWidth;
+
+		public int BoxHeight => boxHeight;
+
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
 			if (this.NumberExistsInBox(board, nextStep))

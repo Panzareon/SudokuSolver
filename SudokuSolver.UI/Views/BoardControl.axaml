@@ -10,7 +10,7 @@
   <Design.DataContext>
     <vm:BoardViewModel/>
   </Design.DataContext>
-  <ItemsControl ItemsSource="{Binding Tiles}" Name="Board">
+  <ItemsControl ItemsSource="{Binding Tiles}" Name="Board" Margin="5">
     <ItemsControl.ItemsPanel>
       <ItemsPanelTemplate>
         <Grid Name="InnerGrid"
@@ -19,13 +19,8 @@
               loc:GridBehavior.ColumnCount="{Binding Width}"/>
       </ItemsPanelTemplate>
     </ItemsControl.ItemsPanel>
-    <ItemsControl.ItemTemplate>
-      <DataTemplate>
-        <loc:Tile DataContext="{Binding .}"/>
-      </DataTemplate>
-    </ItemsControl.ItemTemplate>
     <ItemsControl.Styles>
-      <Style x:DataType="vm:TileViewModel" Selector="ContentPresenter">
+      <Style x:DataType="vm:TileViewModel" Selector="#Board > ContentPresenter">
         <Setter Property="Grid.Column" Value="{Binding X}" />
         <Setter Property="Grid.Row" Value="{Binding Y}" />
       </Style>

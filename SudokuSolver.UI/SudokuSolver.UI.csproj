@@ -29,4 +29,10 @@
   <ItemGroup>
     <ProjectReference Include="..\SudokuSolver\SudokuSolver.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\TileView.axaml.cs">
+      <DependentUpon>TileView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

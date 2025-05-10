@@ -1,7 +1,9 @@
 ﻿using ReactiveUI;
 using SudokuSolver.Model;
+using SudokuSolver.Solver;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +14,12 @@ namespace SudokuSolver.UI.ViewModels
 	{
 		private readonly Board board;
 
-		public TileViewModel(Board board, int x, int y)
+		public TileViewModel(Board board, int x, int y, IEnumerable<ConstraintViewModel> constraints)
 		{
 			this.board = board;
 			this.X = x;
 			this.Y = y;
+			this.Constraints = [.. constraints];
 		}
 
 		public string Display => this.board.GetTile(this.X, this.Y).Display;
@@ -49,6 +52,8 @@ namespace SudokuSolver.UI.ViewModels
 		public int X { get; }
 
 		public int Y { get; }
+
+		public ObservableCollection<ConstraintViewModel> Constraints { get; }
 
 		public void Refresh()
 		{
