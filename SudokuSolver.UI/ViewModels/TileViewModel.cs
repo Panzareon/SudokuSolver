@@ -23,7 +23,28 @@ namespace SudokuSolver.UI.ViewModels
 
 		public bool ShowPossibleValues => !this.board.GetTile(this.X, this.Y).IsSet;
 
-		public string PossibleValues => string.Join(string.Empty, this.board.GetPossibleValues(this.X, this.Y).Values);
+		public string PossibleValues
+		{
+			get
+			{
+				var values = this.board.GetPossibleValues(this.X, this.Y).Values;
+				var valuesPerLine = MathF.Ceiling(MathF.Sqrt(values.Count));
+				var displayValues = new StringBuilder();
+				var taken = 0;
+				foreach (var value in values)
+				{
+					if (taken >= valuesPerLine)
+					{
+						taken = 0;
+						displayValues.AppendLine();
+					}
+
+					displayValues.Append(value.ToString());
+					taken++;
+				}
+				return displayValues.ToString();
+			}
+		}
 
 		public int X { get; }
 
