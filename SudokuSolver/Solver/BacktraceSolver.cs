@@ -22,6 +22,79 @@ namespace SudokuSolver.Solver
 			this.constraints = constraints;
 		}
 
+		public Board? SolveFixedValues()
+		{
+			var possibleBoards = this.Solve().Take(2).ToList();
+			if (possibleBoards.Count == 1)
+			{
+				return possibleBoards[0];
+			}
+
+			if (possibleBoards.Count == 0)
+			{
+				return null;
+			}
+
+			var result = this.board.Clone();
+			Dictionary<Position, LinkedList<int>> valuesToCheck = [];
+			for (var x = 0; x < result.Width; x++)
+			{
+				for (var y = 0; y < result.Height; y++)
+				{
+					var possibleValues = result.GetPossibleValues(x, y).Values.Except(possibleBoards.Select(possibleBoard => possibleBoard.GetTile(x, y).Value));
+					valuesToCheck[new Position(x, y)] = new LinkedList<int>(possibleValues);
+				}
+			}
+			for (var x = 0; x < result.Width; x++)
+			{
+				for (var y = 0; y < result.Height; y++)
+				{
+					if (result.GetTile(x, y).IsSet)
+					{
+						continue;
+					}
+					this.CheckTile(result, x, y, valuesToCheck);
+				}
+			}
+
+			return result;
+		}
+
+		private void CheckTile(Board result, int x, int y, Dictionary<Position, LinkedList<int>> valuesToCheck)
+		{
+			var possibleValues = valuesToCheck[new Position(x, y)];
+			var hasUpdated = false;
+			while (possibleValues.First != null)
+			{
+				var copy = result.Clone();
+				var possibleValue = possibleValues.First;
+				possibleValues.Remove(possibleValue);
+				copy.SetTile(x, y, new Tile { Value = possibleValue.Value, IsSet = true });
+				var possibleResult = new BacktraceSolver(copy, this.constraints).Solve().FirstOrDefault();
+				if (possibleResult == null)
+				{
+					result.GetPossibleValues(x, y).RemoveValue(possibleValue.Value);
+					hasUpdated = true;
+				}
+				else
+				{
+					for (var updateX = x; updateX < result.Width; updateX++)
+					{
+						for (var updateY = x == updateX ? y : 0; updateY < result.Height; updateY++)
+						{
+							valuesToCheck[new Position(updateX, updateY)].Remove(possibleResult.GetTile(updateX, updateY).Value);
+						}
+					}
+				}
+			}
+
+			if (hasUpdated)
+			{
+				var logicSolverResult = new LogicSolver(this.constraints).Solve(result);
+				Debug.Assert(logicSolverResult, "This update should not have changed that there is a valid solution");
+			}
+		}
+
 		/// <summary>
 		/// Solves the board by trying out different values and tracing back when invalid sudokus are reached.
 		/// </summary>

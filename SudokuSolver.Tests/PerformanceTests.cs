@@ -127,5 +127,31 @@ namespace SudokuSolver.Tests
 				null,
 				[..ConstraintFactory.DefaultSudoku(2, 2)]);
 		}
+
+		[Test]
+		public void BacktraceFixedTileSolveTest()
+		{
+			var stopwatch = new Stopwatch();
+			stopwatch.Start();
+			var board = Board.Parse("""
+				         
+				         
+				         
+				123      
+				   4     
+				         
+				         
+				         
+				         
+				""");
+			var result = new BacktraceSolver(board, [.. ConstraintFactory.DefaultSudoku()])
+				.SolveFixedValues();
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.GetPossibleValues(6, 5).Values, Is.EquivalentTo(new[] { 1, 2, 3, 5, 6, 7, 8, 9 }));
+			Assert.That(result.GetPossibleValues(7, 5).Values, Is.EquivalentTo(new[] { 1, 2, 3, 5, 6, 7, 8, 9 }));
+			Assert.That(result.GetPossibleValues(8, 5).Values, Is.EquivalentTo(new[] { 1, 2, 3, 5, 6, 7, 8, 9 }));
+			stopwatch.Stop();
+			Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(5)));
+		}
 	}
 }

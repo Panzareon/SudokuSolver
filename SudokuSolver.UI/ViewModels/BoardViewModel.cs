@@ -25,10 +25,16 @@ namespace SudokuSolver.UI.ViewModels
 
 		public BoardViewModel(Board board, IConstraint[] constraints)
 		{
-			this.board = board;
 			this.constraints = constraints;
 			this.Tiles = new ObservableCollection<TileViewModel>();
 			this.SolveCommand = ReactiveCommand.Create(this.Solve);
+			this.SetBoard(board);
+		}
+
+		private void SetBoard(Board board)
+		{
+			this.Tiles.Clear();
+			this.board = board;
 			for (var x = 0; x < board.Width; x++)
 			{
 				for (var y = 0; y < board.Height; y++)
@@ -67,10 +73,12 @@ namespace SudokuSolver.UI.ViewModels
 
 		public void Solve()
 		{
-			new LogicSolver(this.constraints).Solve(this.board);
-			this.Refresh();
+			var result = new BacktraceSolver(this.board, this.constraints).SolveFixedValues();
+			if (result != null)
+			{
+				this.SetBoard(result);
+			}
 		}
-
 
 		/// <summary>
 		/// Refreshes all tiles after a bigger change in the board.
