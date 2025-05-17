@@ -31,5 +31,13 @@ namespace SudokuSolver.UI.Views
 				this.ViewModel.SetTile(pressedNumber);
 			}
 		}
+
+		private void HandleKeyDown(object sender, KeyEventArgs args)
+		{
+			if (args.Key == Key.Delete || args.Key == Key.Back)
+			{
+				this.ViewModel.SetTile(null);
+			}
+		}
 	}
 }

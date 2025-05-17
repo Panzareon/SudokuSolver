@@ -62,9 +62,9 @@ namespace SudokuSolver.UI.ViewModels
 			this.RaisePropertyChanged(nameof(PossibleValues));
 		}
 
-		public void SetTile(int pressedNumber)
+		public void SetTile(int? pressedNumber)
 		{
-			this.board.SetTile(this.X, this.Y, new Tile { IsSet = true, Value = pressedNumber });
+			this.board.SetTile(this.X, this.Y, new Tile { IsSet = pressedNumber.HasValue, Value = pressedNumber ?? 0 });
 			this.Refresh();
 		}
 	}
