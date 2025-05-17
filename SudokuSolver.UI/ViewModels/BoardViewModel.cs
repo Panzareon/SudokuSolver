@@ -75,6 +75,7 @@ namespace SudokuSolver.UI.ViewModels
 
 		public void Solve()
 		{
+			this.board.ResetPossibleValues();
 			var result = new BacktraceSolver(this.board, this.constraints).SolveFixedValues();
 			if (result != null)
 			{
