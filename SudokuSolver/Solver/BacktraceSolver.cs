@@ -14,12 +14,19 @@ namespace SudokuSolver.Solver
 		private readonly Board board;
 		private readonly IConstraint[] constraints;
 		private readonly LogicSolver logicSolver;
+		private readonly IReadOnlyDictionary<Position, LinkedList<int>>? preferredValues;
 
 		public BacktraceSolver(Board board, IConstraint[] constraints)
 		{
 			this.logicSolver = new LogicSolver(constraints);
 			this.board = board;
 			this.constraints = constraints;
+		}
+
+		private BacktraceSolver(Board board, IConstraint[] constraints, IReadOnlyDictionary<Position, LinkedList<int>> preferredValues)
+			: this(board, constraints)
+		{
+			this.preferredValues = preferredValues;
 		}
 
 		public Board? SolveFixedValues()
@@ -45,6 +52,15 @@ namespace SudokuSolver.Solver
 					valuesToCheck[new Position(x, y)] = new LinkedList<int>(possibleValues);
 				}
 			}
+			for (var x = 0; x < result.MaxNumber * 2; x++)
+			{
+				var possibleResult = new BacktraceSolver(result, this.constraints, valuesToCheck).Solve().First();
+				if (!RemoveValuesToCheck(0, 0, valuesToCheck, possibleResult))
+				{
+					break;
+				}
+			}
+
 			for (var x = 0; x < result.Width; x++)
 			{
 				for (var y = 0; y < result.Height; y++)
@@ -78,13 +94,7 @@ namespace SudokuSolver.Solver
 				}
 				else
 				{
-					for (var updateX = x; updateX < result.Width; updateX++)
-					{
-						for (var updateY = x == updateX ? y : 0; updateY < result.Height; updateY++)
-						{
-							valuesToCheck[new Position(updateX, updateY)].Remove(possibleResult.GetTile(updateX, updateY).Value);
-						}
-					}
+					RemoveValuesToCheck(x, y, valuesToCheck, possibleResult);
 				}
 			}
 
@@ -112,7 +122,7 @@ namespace SudokuSolver.Solver
 				}
 			}
 
-			var nextStepProvider = new NextStepProvider(this.board, this.constraints);
+			var nextStepProvider = new NextStepProvider(this.board, this.constraints, this.preferredValues);
 			var initialStep = nextStepProvider.GetInitial();
 			if (initialStep == null)
 			{
@@ -155,6 +165,23 @@ namespace SudokuSolver.Solver
 					}
 				}
 			}
+		}
+
+		private static bool RemoveValuesToCheck(int x, int y, Dictionary<Position, LinkedList<int>> valuesToCheck, Board possibleResult)
+		{
+			var hasRemovedValue = false;
+			for (var updateX = x; updateX < possibleResult.Width; updateX++)
+			{
+				for (var updateY = x == updateX ? y : 0; updateY < possibleResult.Height; updateY++)
+				{
+					if (valuesToCheck[new Position(updateX, updateY)].Remove(possibleResult.GetTile(updateX, updateY).Value))
+					{
+						hasRemovedValue = true;
+					}
+				}
+			}
+
+			return hasRemovedValue;
 		}
 
 		private bool IsFinished(Board board)

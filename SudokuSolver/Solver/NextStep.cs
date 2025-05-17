@@ -10,11 +10,12 @@ namespace SudokuSolver.Solver
 {
 	public class NextStep
 	{
-		private readonly Board board;
+		protected readonly Board board;
 
 		public NextStep(Board board)
 		{
 			this.board = board;
+			this.NextValue = board.MinNumber;
 		}
 
 		public int Index { get; init; }
@@ -22,7 +23,7 @@ namespace SudokuSolver.Solver
 
 		public int SetY { get; init; }
 
-		public int NextValue { get; set; } = 1;
+		public int NextValue { get; set; }
 
 		public bool IsAt(Position position)
 		{
@@ -36,7 +37,7 @@ namespace SudokuSolver.Solver
 			return newBoard;
 		}
 
-		public NextStep? GetNextValue()
+		public virtual NextStep? GetNextValue()
 		{
 			var possibleValues = board.GetPossibleValues(this.SetX, this.SetY);
 			var nextValue = this.NextValue;
@@ -50,7 +51,7 @@ namespace SudokuSolver.Solver
 						SetX = this.SetX,
 						SetY = this.SetY,
 						Index = this.Index,
-						NextValue = this.NextValue + 1,
+						NextValue = nextValue,
 					};
 				}
 			}

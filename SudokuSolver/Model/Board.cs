@@ -28,6 +28,8 @@ namespace SudokuSolver.Model
 		public int Width { get; }
 		public int Height { get; }
 
+		public int MinNumber { get; } = 1;
+
 		public int MaxNumber { get; }
 
 		public TileSets TileSets { get; private init; }

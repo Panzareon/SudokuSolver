@@ -151,7 +151,8 @@ namespace SudokuSolver.Tests
 			Assert.That(result.GetPossibleValues(7, 5).Values, Is.EquivalentTo(new[] { 1, 2, 3, 5, 6, 7, 8, 9 }));
 			Assert.That(result.GetPossibleValues(8, 5).Values, Is.EquivalentTo(new[] { 1, 2, 3, 5, 6, 7, 8, 9 }));
 			stopwatch.Stop();
-			Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(5)));
+			TestContext.Out.WriteLine($"Took {stopwatch.Elapsed} per run");
+			Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(0.6)));
 		}
 	}
 }
