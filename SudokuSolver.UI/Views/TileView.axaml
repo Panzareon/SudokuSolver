@@ -30,7 +30,7 @@
     <Border
       Focusable="True"
       Name="FocusBorder"
-      TextInput="TextInput">
+      TextInput="HandleTextInput">
       <StackPanel
           HorizontalAlignment="Center"
           VerticalAlignment="Center">

@@ -5,6 +5,7 @@ using SudokuSolver.Solver;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace SudokuSolver.UI.ViewModels
 			this.SetBoard(board);
 		}
 
+		[MemberNotNull(nameof(board))]
 		private void SetBoard(Board board)
 		{
 			this.Tiles.Clear();
@@ -77,6 +79,11 @@ namespace SudokuSolver.UI.ViewModels
 			if (result != null)
 			{
 				this.SetBoard(result);
+			}
+			else
+			{
+				this.Refresh();
+
 			}
 		}
 

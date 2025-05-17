@@ -18,7 +18,7 @@ namespace SudokuSolver.UI.Views
 
 		private TileViewModel ViewModel => this.DataContext as TileViewModel ?? throw new InvalidOperationException("The data context should be a TileViewModel");
 
-		private void TextInput(object sender, TextInputEventArgs args)
+		private void HandleTextInput(object sender, TextInputEventArgs args)
 		{
 			if (args.Text?.Length != 1)
 			{
