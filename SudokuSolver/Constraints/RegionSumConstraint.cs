@@ -15,7 +15,7 @@ namespace SudokuSolver.Constraints
 	/// <param name="positions"></param>
 	public class RegionSumConstraint(params Position[] positions) : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => positions;
+		public IReadOnlyList<Position> MostImpactedPositions => positions;
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

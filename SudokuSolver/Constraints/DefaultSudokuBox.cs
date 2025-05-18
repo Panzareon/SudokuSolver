@@ -11,7 +11,7 @@ namespace SudokuSolver.Constraints
 {
 	public class DefaultSudokuBox(int boxWidth = 3, int boxHeight = 3) : IBoxDefiningConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => [];
+		public IReadOnlyList<Position> MostImpactedPositions => [];
 
 		public int BoxWidth => boxWidth;
 

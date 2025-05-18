@@ -10,7 +10,7 @@ namespace SudokuSolver.Constraints
 {
 	public class UniqueConstraint(params Position[] positions) : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => positions;
+		public IReadOnlyList<Position> MostImpactedPositions => positions;
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

@@ -9,7 +9,7 @@ namespace SudokuSolver.Solver
 {
 	public interface IConstraint
 	{
-		IEnumerable<Position> MostImpactedPositions { get; }
+		IReadOnlyList<Position> MostImpactedPositions { get; }
 
 		bool CanPlace(Board board, NextStep nextStep);
 

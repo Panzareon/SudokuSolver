@@ -13,7 +13,7 @@ namespace SudokuSolver.Constraints
 		private readonly int minDistance;
 		private readonly Position[] positions;
 
-		public IEnumerable<Position> MostImpactedPositions => positions;
+		public IReadOnlyList<Position> MostImpactedPositions => positions;
 
 		public MinDifferenceOnAdjacentConstraint(int minDistance, params Position[] positions)
 		{

@@ -14,7 +14,7 @@ namespace SudokuSolver.Constraints
 	/// <param name="indexedPositions"></param>
 	public class IndexLine(params Position[] indexedPositions) : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => indexedPositions;
+		public IReadOnlyList<Position> MostImpactedPositions => indexedPositions;
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

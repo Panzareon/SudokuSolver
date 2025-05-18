@@ -13,7 +13,7 @@ namespace SudokuSolver.Constraints
 	/// </summary>
 	public class ArrowConstraint(Position sumPosition, params Position[] positionsToSum) : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions { get; } = [.. positionsToSum, sumPosition];
+		public IReadOnlyList<Position> MostImpactedPositions { get; } = [.. positionsToSum, sumPosition];
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

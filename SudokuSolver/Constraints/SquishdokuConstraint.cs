@@ -15,7 +15,7 @@ namespace SudokuSolver.Constraints
 	/// <param name="boxHeight">The full height of each box.</param>
 	public class SquishdokuConstraint(int boxWidth = 3, int boxHeight = 3) : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => [];
+		public IReadOnlyList<Position> MostImpactedPositions => [];
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

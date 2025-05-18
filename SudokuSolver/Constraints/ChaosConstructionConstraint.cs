@@ -12,7 +12,7 @@ namespace SudokuSolver.Constraints
 {
 	public class ChaosConstructionConstraint(int SizeOfRegion) : IChaosConstructionConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions { get; } = [];
+		public IReadOnlyList<Position> MostImpactedPositions { get; } = [];
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

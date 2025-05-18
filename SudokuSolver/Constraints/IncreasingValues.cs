@@ -16,7 +16,7 @@ namespace SudokuSolver.Constraints
 	/// <param name="positions">The positions in the order that they need to be increasing.</param>
 	public class IncreasingValues(params Position[] positions) : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => positions;
+		public IReadOnlyList<Position> MostImpactedPositions => positions;
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

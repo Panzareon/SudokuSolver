@@ -12,7 +12,7 @@ namespace SudokuSolver.Constraints
 {
 	public class NumberOfTilesInRegionInSpecifiedDirection(Position Start, params PositionDelta[] Directions) : IChaosConstructionConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions { get; } = [Start];
+		public IReadOnlyList<Position> MostImpactedPositions { get; } = [Start];
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{

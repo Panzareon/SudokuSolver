@@ -11,7 +11,7 @@ namespace SudokuSolver.Constraints
 {
 	public class DefaultSudokuRowsColumns() : IConstraint
 	{
-		public IEnumerable<Position> MostImpactedPositions => [];
+		public IReadOnlyList<Position> MostImpactedPositions => [];
 
 		public bool CanPlace(Board board, NextStep nextStep)
 		{
