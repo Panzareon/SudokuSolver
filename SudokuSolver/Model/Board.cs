@@ -31,6 +31,8 @@ namespace SudokuSolver.Model
 
 		public TileSets TileSets { get; private init; }
 
+		public bool IsInitialized { get; set; }
+
 		public Tile GetTile(int x, int y)
 		{
 			return this.tiles[x + y * this.Width];
@@ -65,6 +67,7 @@ namespace SudokuSolver.Model
 			var clone = new Board(this.Width, this.Height, this.MaxNumber)
 			{
 				TileSets = new TileSets(this.TileSets),
+				IsInitialized = this.IsInitialized,
 			};
 			this.tiles.CopyTo(clone.tiles, 0);
 			for (var i = 0; i < this.possibleValues.Length; i++)

@@ -34,6 +34,13 @@ namespace SudokuSolver.Model
 			}
 		}
 
+		public TileSet(TileSetType tileSetType, LinkedList<Position> fixedPositions)
+			: this(tileSetType, fixedPositions.Count)
+		{
+			this.Positions = fixedPositions;
+			this.PossiblePositions = new (fixedPositions);
+		}
+
 		public TileSetType TileSetType { get; }
 		public int MaxPositions { get; }
 		public LinkedList<Position> Positions { get; private init; } = new();

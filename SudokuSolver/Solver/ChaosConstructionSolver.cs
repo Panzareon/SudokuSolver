@@ -23,10 +23,7 @@ namespace SudokuSolver.Solver
 			this.constraints = constraints;
 			this.chaosConstructionConstraints = constraints.OfType<IChaosConstructionConstraint>().ToArray();
 			this.logicSolver = new LogicSolver(constraints);
-			for (var i = 0; i < chaosConstructionConstraints.Length; i++)
-			{
-				chaosConstructionConstraints[i].InitializeBoard(board);
-			}
+			board.EnsureIsInitialized(this.constraints);
 		}
 
 		public IEnumerable<Board> Solve(int logicRepeats = 2)

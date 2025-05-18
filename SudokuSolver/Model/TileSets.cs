@@ -67,5 +67,16 @@ namespace SudokuSolver.Model
 			}
 		}
 
+		internal void AddTileSet(TileSetType sudokuRegion, LinkedList<Position> tileSet)
+		{
+			var tileSetIndex = this.Sets.Count;
+			this.Sets.Add(new TileSet(sudokuRegion, tileSet));
+			var current = tileSet.First;
+			while (current != null)
+			{
+				this.cachedPositions[current.Value.X + current.Value.Y * this.width] = tileSetIndex;
+				current = current.Next;
+			}
+		}
 	}
 }

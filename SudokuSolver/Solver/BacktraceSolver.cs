@@ -112,6 +112,7 @@ namespace SudokuSolver.Solver
 		/// <returns>All finished boards which can be reached from the initial board while following the constraints.</returns>
 		public IEnumerable<Board> Solve(int logicRepeats = 2)
 		{
+			board.EnsureIsInitialized(this.constraints);
 			var checkedBoards = new HashSet<Board>();
 			var boardToCheck = new Stack<(Board Board, NextStep Step)>();
 			for (var i = 0; i < logicRepeats; i++)

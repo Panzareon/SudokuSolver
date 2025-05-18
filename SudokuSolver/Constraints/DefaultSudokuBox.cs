@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.Constraints
 {
-	public class DefaultSudokuBox(int boxWidth = 3, int boxHeight = 3) : IConstraint
+	public class DefaultSudokuBox(int boxWidth = 3, int boxHeight = 3) : IBoxDefiningConstraint
 	{
 		public IEnumerable<Position> MostImpactedPositions => [];
 
@@ -25,6 +25,26 @@ namespace SudokuSolver.Constraints
 			}
 
 			return true;
+		}
+
+		public void InitializeBoxPositions(Board board)
+		{
+			for (var boxX = 0; boxX < board.Width; boxX += boxWidth)
+			{
+				for (var boxY = 0; boxY < board.Height; boxY += boxHeight)
+				{
+					var positions = new LinkedList<Position>();
+					for (var x = 0; x < boxWidth; x++)
+					{
+						for (var y = 0; y < boxHeight; y++)
+						{
+							positions.AddLast(new Position(x + boxX, y + boxY));
+						}
+					}
+
+					board.TileSets.AddTileSet(TileSetType.SudokuRegion, positions);
+				}
+			}
 		}
 
 		public bool RemoveNotPossibleValues(Board board)

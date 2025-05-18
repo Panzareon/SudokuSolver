@@ -17,6 +17,7 @@ namespace SudokuSolver.Solver
 		}
 		public bool Solve(Board board)
 		{
+			board.EnsureIsInitialized(this.constraints);
 			if (!this.RemoveNotPlaceable(board))
 			{
 				return false;

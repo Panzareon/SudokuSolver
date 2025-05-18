@@ -34,5 +34,26 @@ namespace SudokuSolver.Solver
 
 			return true;
 		}
+
+		public static void EnsureIsInitialized(this Board board, IConstraint[] constaints)
+		{
+			if (board.IsInitialized)
+			{
+				return;
+			}
+
+			foreach (var initialization in constaints.OfType<IBoxDefiningConstraint>())
+			{
+				initialization.InitializeBoxPositions(board);
+			}
+
+
+			foreach (var chaosConstructionConstraint in constaints.OfType<IChaosConstructionConstraint>())
+			{
+				chaosConstructionConstraint.InitializeBoard(board);
+			}
+
+			board.IsInitialized = true;
+		}
 	}
 }
